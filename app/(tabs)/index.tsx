@@ -1,11 +1,12 @@
 import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 
 import { HelloWave } from '@/components/hello-wave';
 import ParallaxScrollView from '@/components/parallax-scroll-view';
+import { ThemedPressable } from '@/components/themed-pressable';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { Link } from 'expo-router';
+import { router } from 'expo-router';
 
 export default function HomeScreen() {
   return (
@@ -18,10 +19,34 @@ export default function HomeScreen() {
         />
       }>
       <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
+        <ThemedText type="title">Bienvenido!</ThemedText>
         <HelloWave />
       </ThemedView>
       <ThemedView style={styles.stepContainer}>
+        <ThemedText type="subtitle">Saldo:</ThemedText>
+        <ThemedText>
+          $1'000.000
+        </ThemedText>
+      </ThemedView>
+      <ThemedView style={styles.stepContainer}>
+        <ThemedText type="subtitle">Total Ingresos:</ThemedText>
+        <ThemedText>
+          $500.000
+        </ThemedText>
+        <ThemedPressable onPress={() => router.push('/add-income')}>
+          <ThemedText type="link">+ Agregar ingreso</ThemedText>
+        </ThemedPressable>          
+      </ThemedView>
+      <ThemedView style={styles.stepContainer}>
+        <ThemedText type="subtitle">Total Gastos:</ThemedText>
+        <ThemedText>
+          $500.000
+        </ThemedText>
+        <ThemedPressable onPress={() => router.push('/add-expense')}>
+          <ThemedText type="link">+ Agregar gasto</ThemedText>
+        </ThemedPressable>
+      </ThemedView>
+      {/* <ThemedView style={styles.stepContainer}>
         <ThemedText type="subtitle">Step 1: Try it</ThemedText>
         <ThemedText>
           Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
@@ -73,7 +98,7 @@ export default function HomeScreen() {
           <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
           <ThemedText type="defaultSemiBold">app-example</ThemedText>.
         </ThemedText>
-      </ThemedView>
+      </ThemedView> */}
     </ParallaxScrollView>
   );
 }

@@ -1,13 +1,15 @@
 import { Image } from 'expo-image';
 import { Platform, StyleSheet } from 'react-native';
 
-import { Collapsible } from '@/components/ui/collapsible';
 import { ExternalLink } from '@/components/external-link';
 import ParallaxScrollView from '@/components/parallax-scroll-view';
+import { ThemedPressable } from '@/components/themed-pressable';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
+import { Collapsible } from '@/components/ui/collapsible';
 import { IconSymbol } from '@/components/ui/icon-symbol';
 import { Fonts } from '@/constants/theme';
+import { router } from 'expo-router';
 
 export default function TabTwoScreen() {
   return (
@@ -31,6 +33,18 @@ export default function TabTwoScreen() {
         </ThemedText>
       </ThemedView>
       <ThemedText>This app includes example code to help you get started.</ThemedText>
+      <Collapsible title="Categorias">
+        <ThemedText>
+          <ThemedPressable onPress={() => router.push({pathname: '/categories', params: {type: "income"}})}>
+            <ThemedText type="link">Ingresos</ThemedText>
+          </ThemedPressable>
+        </ThemedText>
+        <ThemedText>
+          <ThemedPressable onPress={() => router.push({pathname: '/categories', params: {type: "expense"}})}>
+            <ThemedText type='link'>Gastos</ThemedText>
+          </ThemedPressable>
+        </ThemedText>
+      </Collapsible>
       <Collapsible title="File-based routing">
         <ThemedText>
           This app has two screens:{' '}
