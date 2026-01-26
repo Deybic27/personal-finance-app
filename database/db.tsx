@@ -72,7 +72,51 @@ export function insertIncome(
     );
   } catch (error) {
     console.error('Error to insert income: ', error);
-    throw new Error('Failed to inserr income')
+    throw new Error('Failed to insert income')
+  }
+}
+
+export function updateIncome(
+  id: number,
+  amount: number,
+  category: string,
+  date: string,
+  note?: string
+) {
+  try {
+    db.runSync(
+      `
+      UPDATE incomes
+      SET amount = ?, category = ?, date = ?, note = ?
+      WHERE id = ?
+      `,
+      [amount, category, date, note ?? null, id]
+    );
+  } catch (error) {
+    console.error('Error to update income: ', error);
+    throw new Error('Failed to update income')
+  }
+}
+
+export function updateExpense(
+  id: number,
+  amount: number,
+  category: string,
+  date: string,
+  note?: string
+) {
+  try {
+    db.runSync(
+      `
+      UPDATE expenses
+      SET amount = ?, category = ?, date = ?, note = ?
+      WHERE id = ?
+      `,
+      [amount, category, date, note ?? null, id]
+    );
+  } catch (error) {
+    console.error('Error to update expense: ', error);
+    throw new Error('Failed to update expense')
   }
 }
 
@@ -107,6 +151,20 @@ export function getExpenses() {
   }
 }
 
+export function getExpenseById(id: number) {
+  try {
+    const result = db.getFirstSync<{ id: number; amount: number; category: number; date: string, note: string }>(`
+      SELECT * FROM expenses
+      WHERE id = ?
+      ORDER BY date DESC
+    `, [id]);
+    return result;
+  } catch (error) {
+    console.error('Error to get expense by Id: ', error);
+    throw new Error('Failed to get expense by Id')
+  }
+}
+
 export function getExpensesWithCategory(): Array<{ id: number; amount: number; date: string, note: string; categoryId: number; categoryName: string; categoryColor: string; }> {
   try {
     return db.getAllSync(`
@@ -138,6 +196,65 @@ export function getIncomes(): Array<{ id: number; amount: number; category: numb
   } catch (error) {
     console.error('Error to get incomes: ', error);
     throw new Error('Failed to get incomes')
+  }
+}
+
+export function getIncomeById(id: number) {
+  try {
+    const result = db.getFirstSync<{ id: number; amount: number; category: number; date: string, note: string }>(`
+      SELECT * FROM incomes
+      WHERE id = ?
+      ORDER BY date DESC
+    `, [id]);
+    return result;
+  } catch (error) {
+    console.error('Error to get income by Id: ', error);
+    throw new Error('Failed to get income by Id')
+  }
+}
+
+export function getTotalIncomes() {
+  try {
+    const result = db.getFirstSync<{ totalAmount: number | null}>(`
+      SELECT COALESCE(SUM(amount), 0) as totalAmount FROM incomes;
+    `);
+    return result?.totalAmount ?? 0;
+  } catch (error) {
+    console.error('Error to get total incomes: ', error);
+    throw new Error('Failed to get total incomes')
+  }
+}
+
+export function getTotalExpenses() {
+  try {
+    const result = db.getFirstSync<{ totalAmount: number | null}>(`
+      SELECT COALESCE(SUM(amount), 0) as totalAmount FROM expenses;
+    `);
+    return result?.totalAmount ?? 0;
+  } catch (error) {
+    console.error('Error to get total expenses: ', error);
+    throw new Error('Failed to get total expenses')
+  }
+}
+
+export function getSaldo() {
+  try {
+    const result = db.getFirstSync<{ saldo: number | null}>(`
+      WITH
+      total_incomes AS (
+        SELECT COALESCE(SUM(amount), 0) AS total FROM incomes
+      ),
+      total_expenses AS (
+        SELECT COALESCE(SUM(amount), 0) AS total FROM expenses
+      )
+      SELECT
+        total_incomes.total - total_expenses.total AS saldo
+      FROM total_incomes, total_expenses;
+    `);
+    return result?.saldo ?? 0;
+  } catch (error) {
+    console.error('Error to get saldo: ', error);
+    throw new Error('Failed to get saldo')
   }
 }
 

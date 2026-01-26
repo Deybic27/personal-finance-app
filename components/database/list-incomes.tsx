@@ -1,4 +1,4 @@
-import { getIncomesWithCategory } from "@/app/database/db";
+import { getIncomesWithCategory } from "@/database/db";
 import { router, useFocusEffect } from "expo-router";
 import { useCallback, useState } from "react";
 import { FlatList, StyleSheet } from "react-native";
@@ -26,13 +26,15 @@ export function ListIncomes() {
                     const date = new Date(item.date).toISOString().split('T')[0]
                     return (
                         <ThemedView style={styles.sectionCard}>
-                            <IncomeCard 
-                                colorCategory={item.categoryColor}
-                                nameCategory={item.categoryName}
-                                amount={item.amount}
-                                date={date}
-                                note={item.note}
-                            />
+                            <ThemedPressable onPress={() => router.push({pathname: '/edit-income', params: {id: item.id}})}>
+                                <IncomeCard 
+                                    colorCategory={item.categoryColor}
+                                    nameCategory={item.categoryName}
+                                    amount={item.amount}
+                                    date={date}
+                                    note={item.note}
+                                />
+                            </ThemedPressable>
                         </ThemedView>
                     );
                 }}

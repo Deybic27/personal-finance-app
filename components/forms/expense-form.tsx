@@ -1,11 +1,11 @@
 import { Image } from 'expo-image';
 import { Alert, StyleSheet } from 'react-native';
 
-import { getCategoriesByType, getExpenses, insertExpense } from '@/app/database/db';
 import { HelloWave } from '@/components/hello-wave';
 import ParallaxScrollView from '@/components/parallax-scroll-view';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
+import { getCategoriesByType, getExpenses, insertExpense } from '@/database/db';
 import { router, useFocusEffect } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { ThemedDateInput } from '../themed-date-input';
@@ -98,7 +98,7 @@ export function ExpenseForm() {
       </ThemedView>
       <ThemedView style={styles.stepContainer}>
         <ThemedPressable type="button" onPress={handleSubmit}>
-          <ThemedText type="button">Guardar gasto</ThemedText>
+          <ThemedText type="button">Guardar</ThemedText>
         </ThemedPressable>
       </ThemedView>
     </ParallaxScrollView>

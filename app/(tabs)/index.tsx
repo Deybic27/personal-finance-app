@@ -6,9 +6,25 @@ import ParallaxScrollView from '@/components/parallax-scroll-view';
 import { ThemedPressable } from '@/components/themed-pressable';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { router } from 'expo-router';
+import { formatMoney } from '@/utils/format-money';
+import { router, useFocusEffect } from 'expo-router';
+import { useCallback, useState } from 'react';
+import { getSaldo, getTotalExpenses, getTotalIncomes } from '../../database/db';
 
 export default function HomeScreen() {
+
+  const [totalAmountIncomes, setTotalAmountIncomes] = useState(getTotalIncomes());
+  const [totalAmountExpenses, setTotalAmountExpenses] = useState(getTotalExpenses());
+  const [saldo, setSaldo] = useState(getSaldo());
+  console.log(saldo);
+
+  useFocusEffect(
+      useCallback(() => {
+          setTotalAmountIncomes(getTotalIncomes());
+          setTotalAmountExpenses(getTotalExpenses());
+          setSaldo(getSaldo());
+      }, [])
+  );
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
@@ -25,13 +41,13 @@ export default function HomeScreen() {
       <ThemedView style={styles.stepContainer}>
         <ThemedText type="subtitle">Saldo:</ThemedText>
         <ThemedText>
-          $1'000.000
+          {formatMoney(saldo)}
         </ThemedText>
       </ThemedView>
       <ThemedView style={styles.stepContainer}>
         <ThemedText type="subtitle">Total Ingresos:</ThemedText>
         <ThemedText>
-          $500.000
+          {formatMoney(totalAmountIncomes)}
         </ThemedText>
         <ThemedPressable onPress={() => router.push('/add-income')}>
           <ThemedText type="link">+ Agregar ingreso</ThemedText>
@@ -40,7 +56,7 @@ export default function HomeScreen() {
       <ThemedView style={styles.stepContainer}>
         <ThemedText type="subtitle">Total Gastos:</ThemedText>
         <ThemedText>
-          $500.000
+          {formatMoney(totalAmountExpenses)}
         </ThemedText>
         <ThemedPressable onPress={() => router.push('/add-expense')}>
           <ThemedText type="link">+ Agregar gasto</ThemedText>

@@ -1,4 +1,4 @@
-import { getCategoriesByType, insertIncome } from "@/database/db";
+import { getCategoriesByType, getExpenseById, updateExpense } from "@/database/db";
 import { Image } from "expo-image";
 import { router, useFocusEffect } from "expo-router";
 import { useCallback, useState } from "react";
@@ -12,19 +12,22 @@ import { ThemedText } from "../themed-text";
 import { ThemedTextInput } from "../themed-text-input";
 import { ThemedView } from "../themed-view";
 
-export function IncomeForm(){
+type ExpenseEditFormProps = {
+  expenseId: number
+}
+
+export function ExpenseEditForm({
+  expenseId
+}: ExpenseEditFormProps){
   const [amount, setAmount] = useState('')
   const [category, setCategory] = useState('')
   const [date, setDate] = useState(new Date())
   const [note, setNote] = useState('')
-
+  
     const [categories, setCategories] = useState([{label: '', value: ''}]);
       useFocusEffect(
         useCallback(() => {
-          const data = getCategoriesByType('income');
-          // console.log("Categorias de Incomes: ", data);
-          // const dataIncomes = getIncomes();
-          // console.log("Incomes: ", dataIncomes);
+          const data = getCategoriesByType('expense');
 
           setCategories(
             data.map(category => ({
@@ -32,6 +35,12 @@ export function IncomeForm(){
               value: String(category.id),
             }))
           );
+
+          const currentExpense = getExpenseById(expenseId)
+          setAmount(String(currentExpense?.amount));
+          setCategory(String(currentExpense?.category));
+          setDate(new Date(String(currentExpense?.date)));
+          setNote(String(currentExpense?.note));
         }, [])
       );
 
@@ -54,12 +63,13 @@ export function IncomeForm(){
             const expenseDate = date.toLocaleDateString('en-CA')
             // return(console.log(amount, category, date, note));
             // return(console.log(expenseAmount, category, expenseDate, note));
-            console.log("Insert Income: ", expenseAmount, category, expenseDate, note);
-            insertIncome(
-                expenseAmount,
-                category,
-                expenseDate,
-                note
+            console.log("Update Expense: ", expenseId, expenseAmount, category, expenseDate, note);
+            updateExpense(
+              expenseId,
+              expenseAmount,
+              category,
+              expenseDate,
+              note
             );
       
             router.back();
@@ -75,7 +85,7 @@ export function IncomeForm(){
               }
           >
               <ThemedView style={styles.titleContainer}>
-                <ThemedText type="title">Agregar ingreso</ThemedText>
+                <ThemedText type="title">Editar ingreso</ThemedText>
                 <HelloWave />
               </ThemedView>
               <ThemedView style={styles.stepContainer}>

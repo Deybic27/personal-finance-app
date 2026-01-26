@@ -1,4 +1,4 @@
-import { getCategoryByName, insertCategory } from "@/app/database/db";
+import { getCategoryByName, insertCategory } from "@/database/db";
 import { Image } from "expo-image";
 import { router } from "expo-router";
 import { useState } from "react";

@@ -1,4 +1,4 @@
-import { getExpensesWithCategory } from "@/app/database/db";
+import { getExpensesWithCategory } from "@/database/db";
 import { router, useFocusEffect } from "expo-router";
 import { useCallback, useState } from "react";
 import { FlatList, StyleSheet } from "react-native";
@@ -24,13 +24,15 @@ export function ListExpenses() {
                     const date = new Date(item.date).toISOString().split('T')[0]
                     return (
                         <ThemedView style={styles.sectionCard}>
-                            <ExpenseCard 
-                                colorCategory={item.categoryColor}
-                                nameCategory={item.categoryName}
-                                amount={item.amount}
-                                date={date}
-                                note={item.note}
-                            />
+                            <ThemedPressable onPress={() => router.push({pathname: '/edit-expense', params: {id: item.id}})}>
+                                <ExpenseCard 
+                                    colorCategory={item.categoryColor}
+                                    nameCategory={item.categoryName}
+                                    amount={item.amount}
+                                    date={date}
+                                    note={item.note}
+                                />
+                            </ThemedPressable>
                         </ThemedView>
                     );
                 }}

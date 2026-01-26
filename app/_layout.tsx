@@ -5,7 +5,7 @@ import 'react-native-reanimated';
 
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { useEffect } from 'react';
-import { initDatabase } from './database/db';
+import { initDatabase } from '../database/db';
 
 export const unstable_settings = {
   anchor: '(tabs)',

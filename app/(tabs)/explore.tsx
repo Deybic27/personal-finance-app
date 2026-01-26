@@ -1,7 +1,5 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 
-import { ExternalLink } from '@/components/external-link';
 import ParallaxScrollView from '@/components/parallax-scroll-view';
 import { ThemedPressable } from '@/components/themed-pressable';
 import { ThemedText } from '@/components/themed-text';
@@ -10,7 +8,7 @@ import { Collapsible } from '@/components/ui/collapsible';
 import { IconSymbol } from '@/components/ui/icon-symbol';
 import { Fonts } from '@/constants/theme';
 import { router } from 'expo-router';
-import { resetDb } from '../database/db';
+import { resetDb } from '../../database/db';
 
 export default function TabTwoScreen() {
   return (
@@ -33,9 +31,9 @@ export default function TabTwoScreen() {
           Explore
         </ThemedText>
       </ThemedView>
-      <ThemedText>This app includes example code to help you get started.</ThemedText>
+      <ThemedText>Explore sus finanzas.</ThemedText>
       {/* CATEGORIES */}
-      <Collapsible title="Categorias">
+      {/* <Collapsible title="Categorias">
         <ThemedText>
           <ThemedPressable onPress={() => router.push({pathname: '/categories', params: {type: "income"}})}>
             <ThemedText type="link">Ingresos</ThemedText>
@@ -46,7 +44,7 @@ export default function TabTwoScreen() {
             <ThemedText type='link'>Gastos</ThemedText>
           </ThemedPressable>
         </ThemedText>
-      </Collapsible>
+      </Collapsible> */}
       {/* INCOMES */}
       <Collapsible title="Ingresos">
         <ThemedText>
@@ -80,7 +78,7 @@ export default function TabTwoScreen() {
           </ThemedPressable>
         </ThemedText>
       </Collapsible>
-      <Collapsible title="File-based routing">
+      {/* <Collapsible title="File-based routing">
         <ThemedText>
           This app has two screens:{' '}
           <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> and{' '}
@@ -142,7 +140,7 @@ export default function TabTwoScreen() {
             </ThemedText>
           ),
         })}
-      </Collapsible>
+      </Collapsible> */}
     </ParallaxScrollView>
   );
 }

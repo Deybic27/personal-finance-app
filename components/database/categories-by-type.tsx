@@ -1,4 +1,4 @@
-import { deleteCategory, getCategoriesByType } from "@/app/database/db";
+import { deleteCategory, getCategoriesByType } from "@/database/db";
 import { useState } from "react";
 import { FlatList, StyleSheet } from "react-native";
 import { ThemedPressable } from "../themed-pressable";
@@ -34,7 +34,6 @@ export function CategoriesByType({type = 'income'}: CategoriesByTypeProps) {
         <FlatList
           data={categories}
           keyExtractor={item => String(item.id)}
-          // ListHeaderComponent={<ThemedPressable type="floatButton" onPress={() => router.push('/add-category')} />}
           renderItem={({item}) => {
             return(
             <ThemedView style={[styles.option]} key={item.id}>
@@ -54,6 +53,7 @@ export function CategoriesByType({type = 'income'}: CategoriesByTypeProps) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    padding: 20,
     // width: '100%',
     // display: 'flex',
     // flexDirection: 'column',
