@@ -14,17 +14,17 @@ export function ThemedDateInput({
   onChange
 }: ThemedDateInputProps) {
   const [show, setShow] = useState(false);
-  console.log(value);
+  console.log(value.toLocaleDateString('en-CA'));
   return (
     <ThemedView>
         <ThemedPressable type="date" onPress={() => setShow(true)}>
-            <ThemedText type='date'>{value ? value.toISOString().split('T')[0] : "Seleccionar fecha"}</ThemedText>
+            <ThemedText type='date'>{value ? value.toLocaleDateString('en-CA') : "Seleccionar fecha"}</ThemedText>
             {/* value.toISOString().split('T')[0] */}
         </ThemedPressable>
 
         {show && (
         <DateTimePicker
-            value={new Date(value)}
+            value={value}
             mode="date"
             display="default"
             onChange={(event, selectedDate) => {

@@ -51,7 +51,7 @@ export function ExpenseForm() {
     }
 
     const expenseAmount = parseInt(amount)
-    const expenseDate = date.toISOString()
+    const expenseDate = date.toLocaleDateString('en-CA')
 
     console.log("Insert Expense: ", expenseAmount, category, expenseDate, note);
     insertExpense(

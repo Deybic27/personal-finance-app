@@ -51,7 +51,7 @@ export function IncomeForm(){
       
             
             const expenseAmount = parseInt(amount)
-            const expenseDate = date.toISOString()
+            const expenseDate = date.toLocaleDateString('en-CA')
             // return(console.log(amount, category, date, note));
             // return(console.log(expenseAmount, category, expenseDate, note));
             console.log("Insert Income: ", expenseAmount, category, expenseDate, note);
