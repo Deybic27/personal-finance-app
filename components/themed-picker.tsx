@@ -1,6 +1,5 @@
 import { useThemeColor } from '@/hooks/use-theme-color';
 import { Picker, type PickerProps } from '@react-native-picker/picker';
-import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 type PickerItem = {
@@ -13,17 +12,20 @@ export type ThemedPickerProps = PickerProps & {
   darkColor?: string;
   type?: 'default';
   items: PickerItem[];
+  value: string;
+  onChange: (value: string) => void;
 };
 
 export function ThemedPicker({
     items,
+    value,
+    onChange,
     style,
     lightColor,
     darkColor,
     type = 'default',
     ...rest
 }: ThemedPickerProps) {
-    const [value, setValue] = useState('food');
     const color = useThemeColor({ light: lightColor, dark: darkColor }, 'text');
     return (
         <View style={[
@@ -33,7 +35,7 @@ export function ThemedPicker({
         >
             <Picker
                 selectedValue={value}
-                onValueChange={(itemValue) => setValue(itemValue)}
+                onValueChange={(itemValue) => onChange(itemValue)}
             >
                 <Picker.Item label="Seleccione"/>
                 {items.map((item) => (

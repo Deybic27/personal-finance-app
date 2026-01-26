@@ -1,5 +1,5 @@
 import { useThemeColor } from "@/hooks/use-theme-color";
-import { StyleSheet } from "react-native";
+import { FlatList, StyleSheet } from "react-native";
 import { ThemedPressable } from "./themed-pressable";
 import { ThemedText } from "./themed-text";
 import { ThemedView } from "./themed-view";
@@ -22,7 +22,7 @@ export function ThemedRadioGroup({ lightColor, darkColor, options, value, onChan
 
     return (
         <ThemedView>
-            {options.map(option => {
+            {/* {options.map(option => {
                 const selected = option.value === value;
 
                 return (
@@ -35,7 +35,23 @@ export function ThemedRadioGroup({ lightColor, darkColor, options, value, onChan
                     <ThemedText>{option.label}</ThemedText>
                 </ThemedPressable>
                 );
-            })}
+            })} */}
+            <FlatList
+                data={options}
+                keyExtractor={item => String(item.value)}
+                renderItem={({item}) => {
+                const selected = item.value === value;
+                    return (
+                        <ThemedPressable
+                            style={styles.option}
+                            onPress={() => onChange(item.value)}
+                        >
+                            <ThemedView style={[styles.circle, selected && { backgroundColor: color }]} />
+                            <ThemedText>{item.label}</ThemedText>
+                        </ThemedPressable>
+                    )
+                }}
+            />
         </ThemedView>
     );
 }

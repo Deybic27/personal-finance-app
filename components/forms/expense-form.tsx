@@ -1,7 +1,7 @@
 import { Image } from 'expo-image';
-import { StyleSheet } from 'react-native';
+import { Alert, StyleSheet } from 'react-native';
 
-import { getCategoriesByType } from '@/app/database/db';
+import { getCategoriesByType, getExpenses, insertExpense } from '@/app/database/db';
 import { HelloWave } from '@/components/hello-wave';
 import ParallaxScrollView from '@/components/parallax-scroll-view';
 import { ThemedText } from '@/components/themed-text';
@@ -14,11 +14,18 @@ import { ThemedPressable } from '../themed-pressable';
 import { ThemedTextInput } from '../themed-text-input';
 
 export function ExpenseForm() {
+  const [amount, setAmount] = useState('')
+  const [category, setCategory] = useState('')
+  const [date, setDate] = useState(new Date())
+  const [note, setNote] = useState('')
+
   const [categories, setCategories] = useState([{label: '', value: ''}]);
   useFocusEffect(
     useCallback(() => {
       const data = getCategoriesByType('expense');
-      console.log(data);
+      console.log("Categorias de Expenses: ", data);
+      const dataExpenses = getExpenses();
+      console.log("Expenses: ", dataExpenses);
 
       setCategories(
         data.map(category => ({
@@ -28,6 +35,34 @@ export function ExpenseForm() {
       );
     }, [])
   );
+
+  function handleSubmit() {
+    if (!amount) {
+      Alert.alert('Error', 'El monto es obligatorio');
+      return;
+    }
+    if (!category) {
+      Alert.alert('Error', 'La categoria es obligatoria');
+      return;
+    }
+    if (!date) {
+      Alert.alert('Error', 'La fecha es obligatoria');
+      return;
+    }
+
+    const expenseAmount = parseInt(amount)
+    const expenseDate = date.toISOString()
+
+    console.log("Insert Expense: ", expenseAmount, category, expenseDate, note);
+    insertExpense(
+        expenseAmount,
+        category,
+        expenseDate,
+        note
+    );
+
+    router.back();
+  }
   
   return (
     <ParallaxScrollView
@@ -44,25 +79,25 @@ export function ExpenseForm() {
       </ThemedView>
       <ThemedView style={styles.stepContainer}>
         <ThemedText type="subtitle">Monto</ThemedText>
-        <ThemedTextInput type="default" placeholder="Ej: 50000" keyboardType="numeric" />
+        <ThemedTextInput value={amount} onChangeText={setAmount} type="default" placeholder="Ej: 50000" keyboardType="numeric" />
       </ThemedView>
       <ThemedView style={styles.stepContainer}>
         <ThemedText type="subtitle">Categoría</ThemedText>
-        <ThemedPicker type="default" items={categories} />
+        <ThemedPicker type="default" items={categories} value={category} onChange={setCategory}/>
         <ThemedPressable onPress={() => router.push('/add-category')}>
           <ThemedText type="link">+ Agregar categoría</ThemedText>
         </ThemedPressable>
       </ThemedView>
       <ThemedView style={styles.stepContainer}>
         <ThemedText type="subtitle">Fecha</ThemedText>
-        <ThemedDateInput />
+        <ThemedDateInput value={date} onChange={setDate} />
       </ThemedView>
       <ThemedView style={styles.stepContainer}>
         <ThemedText type="subtitle">Notas adicionales</ThemedText>
-        <ThemedTextInput type="default" placeholder="Ej: Cena con amigos" />
+        <ThemedTextInput value={note} onChangeText={setNote} type="default" placeholder="Ej: Cena con amigos" />
       </ThemedView>
       <ThemedView style={styles.stepContainer}>
-        <ThemedPressable type="button">
+        <ThemedPressable type="button" onPress={handleSubmit}>
           <ThemedText type="button">Guardar gasto</ThemedText>
         </ThemedPressable>
       </ThemedView>

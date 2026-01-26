@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { StyleSheet } from "react-native";
+import { FlatList, StyleSheet } from "react-native";
 import { ThemedPressable } from "./themed-pressable";
 import { ThemedText } from "./themed-text";
 import { ThemedView } from "./themed-view";
@@ -17,10 +16,9 @@ type ThemedSelectColorProps = {
 };
 
 export function ThemedSelectColor({options, value, onChange }: ThemedSelectColorProps) {
-    const [method, setMethod] = useState('red');
     return(
         <ThemedView style={styles.container}>
-            {options.map(option => {
+            {/* {options.map(option => {
                 const selected = option.color === value;
                 return (
                 <ThemedPressable
@@ -33,7 +31,27 @@ export function ThemedSelectColor({options, value, onChange }: ThemedSelectColor
                     </ThemedView>
                 </ThemedPressable>
                 );
-            })}
+            })} */}
+            <FlatList
+              data={options}
+              keyExtractor={item => item.color}
+              horizontal={true}
+              nestedScrollEnabled={true}
+              renderItem={({item}) => {
+                const selected = item.color === value;
+
+                return (
+                  <ThemedPressable
+                    style={styles.option}
+                    onPress={() => onChange(item.color)}
+                >
+                    <ThemedView style={[styles.circle, selected && { backgroundColor: item.color }, { backgroundColor: item.color }]}>
+                        <ThemedText style={[styles.hidden, selected && styles.active]}>✓</ThemedText>
+                    </ThemedView>
+                </ThemedPressable>
+                );
+              }}
+            />
         </ThemedView>
     );
 }

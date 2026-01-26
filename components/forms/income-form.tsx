@@ -1,8 +1,8 @@
-import { getCategoriesByType } from "@/app/database/db";
+import { getCategoriesByType, insertIncome } from "@/app/database/db";
 import { Image } from "expo-image";
 import { router, useFocusEffect } from "expo-router";
 import { useCallback, useState } from "react";
-import { StyleSheet } from "react-native";
+import { Alert, StyleSheet } from "react-native";
 import { HelloWave } from "../hello-wave";
 import ParallaxScrollView from "../parallax-scroll-view";
 import { ThemedDateInput } from "../themed-date-input";
@@ -13,10 +13,18 @@ import { ThemedTextInput } from "../themed-text-input";
 import { ThemedView } from "../themed-view";
 
 export function IncomeForm(){
+  const [amount, setAmount] = useState('')
+  const [category, setCategory] = useState('')
+  const [date, setDate] = useState(new Date())
+  const [note, setNote] = useState('')
+
     const [categories, setCategories] = useState([{label: '', value: ''}]);
       useFocusEffect(
         useCallback(() => {
           const data = getCategoriesByType('income');
+          // console.log("Categorias de Incomes: ", data);
+          // const dataIncomes = getIncomes();
+          // console.log("Incomes: ", dataIncomes);
 
           setCategories(
             data.map(category => ({
@@ -26,6 +34,36 @@ export function IncomeForm(){
           );
         }, [])
       );
+
+      function handleSubmit() {
+            if (!amount) {
+            Alert.alert('Error', 'El monto es obligatorio');
+            return;
+            }
+            if (!category) {
+            Alert.alert('Error', 'La categoria es obligatoria');
+            return;
+            }
+            if (!date) {
+            Alert.alert('Error', 'La fecha es obligatoria');
+            return;
+            }
+      
+            
+            const expenseAmount = parseInt(amount)
+            const expenseDate = date.toISOString()
+            // return(console.log(amount, category, date, note));
+            // return(console.log(expenseAmount, category, expenseDate, note));
+            console.log("Insert Income: ", expenseAmount, category, expenseDate, note);
+            insertIncome(
+                expenseAmount,
+                category,
+                expenseDate,
+                note
+            );
+      
+            router.back();
+        }
     return (
         <ParallaxScrollView
               headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
@@ -34,32 +72,33 @@ export function IncomeForm(){
                   source={require('@/assets/images/partial-react-logo.png')}
                   style={styles.reactLogo}
                 />
-              }>
+              }
+          >
               <ThemedView style={styles.titleContainer}>
                 <ThemedText type="title">Agregar ingreso</ThemedText>
                 <HelloWave />
               </ThemedView>
               <ThemedView style={styles.stepContainer}>
                 <ThemedText type="subtitle">Monto</ThemedText>
-                <ThemedTextInput type="default" placeholder="Ej: 50000" keyboardType="numeric" />
+                <ThemedTextInput value={amount} onChangeText={setAmount} type="default" placeholder="Ej: 50000" keyboardType="numeric" />
               </ThemedView>
               <ThemedView style={styles.stepContainer}>
                 <ThemedText type="subtitle">Categoría</ThemedText>
-                <ThemedPicker type="default" items={categories} />
+                <ThemedPicker type="default" items={categories} value={category} onChange={setCategory}/>
                 <ThemedPressable onPress={() => router.push('/add-category')}>
                   <ThemedText type="link">+ Agregar categoría</ThemedText>
                 </ThemedPressable>
               </ThemedView>
               <ThemedView style={styles.stepContainer}>
                 <ThemedText type="subtitle">Fecha</ThemedText>
-                <ThemedDateInput />
+                <ThemedDateInput value={date} onChange={setDate} />
               </ThemedView>
               <ThemedView style={styles.stepContainer}>
                 <ThemedText type="subtitle">Notas adicionales</ThemedText>
-                <ThemedTextInput type="default" placeholder="Ej: Cena con amigos" />
+                <ThemedTextInput value={note} onChangeText={setNote} type="default" placeholder="Ej: Cena con amigos" />
               </ThemedView>
               <ThemedView style={styles.stepContainer}>
-                <ThemedPressable type="button">
+                <ThemedPressable type="button" onPress={handleSubmit}>
                   <ThemedText type="button">Guardar gasto</ThemedText>
                 </ThemedPressable>
               </ThemedView>

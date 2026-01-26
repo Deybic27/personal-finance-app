@@ -10,6 +10,7 @@ import { Collapsible } from '@/components/ui/collapsible';
 import { IconSymbol } from '@/components/ui/icon-symbol';
 import { Fonts } from '@/constants/theme';
 import { router } from 'expo-router';
+import { resetDb } from '../database/db';
 
 export default function TabTwoScreen() {
   return (
@@ -33,6 +34,7 @@ export default function TabTwoScreen() {
         </ThemedText>
       </ThemedView>
       <ThemedText>This app includes example code to help you get started.</ThemedText>
+      {/* CATEGORIES */}
       <Collapsible title="Categorias">
         <ThemedText>
           <ThemedPressable onPress={() => router.push({pathname: '/categories', params: {type: "income"}})}>
@@ -42,6 +44,39 @@ export default function TabTwoScreen() {
         <ThemedText>
           <ThemedPressable onPress={() => router.push({pathname: '/categories', params: {type: "expense"}})}>
             <ThemedText type='link'>Gastos</ThemedText>
+          </ThemedPressable>
+        </ThemedText>
+      </Collapsible>
+      {/* INCOMES */}
+      <Collapsible title="Ingresos">
+        <ThemedText>
+          <ThemedPressable onPress={() => router.push({pathname: '/categories', params: {type: "income"}})}>
+            <ThemedText type="link">Categorias</ThemedText>
+          </ThemedPressable>
+        </ThemedText>
+        <ThemedText>
+          <ThemedPressable onPress={() => router.push({pathname: '/incomes', params: {type: "income"}})}>
+            <ThemedText type='link'>Ver ingresos</ThemedText>
+          </ThemedPressable>
+        </ThemedText>
+      </Collapsible>
+      {/* EXPENSES */}
+      <Collapsible title="Gastos">
+        <ThemedText>
+          <ThemedPressable onPress={() => router.push({pathname: '/categories', params: {type: "expense"}})}>
+            <ThemedText type="link">Categorias</ThemedText>
+          </ThemedPressable>
+        </ThemedText>
+        <ThemedText>
+          <ThemedPressable onPress={() => router.push({pathname: '/expenses', params: {type: "expense"}})}>
+            <ThemedText type='link'>Ver gastos</ThemedText>
+          </ThemedPressable>
+        </ThemedText>
+      </Collapsible>
+      <Collapsible title="Base de datos">
+        <ThemedText>
+          <ThemedPressable onPress={() => resetDb()}>
+            <ThemedText type="link">Reset</ThemedText>
           </ThemedPressable>
         </ThemedText>
       </Collapsible>

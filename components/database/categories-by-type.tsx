@@ -1,6 +1,6 @@
 import { deleteCategory, getCategoriesByType } from "@/app/database/db";
 import { useState } from "react";
-import { StyleSheet } from "react-native";
+import { FlatList, StyleSheet } from "react-native";
 import { ThemedPressable } from "../themed-pressable";
 import { ThemedText } from "../themed-text";
 import { ThemedView } from "../themed-view";
@@ -20,7 +20,7 @@ export function CategoriesByType({type = 'income'}: CategoriesByTypeProps) {
 
   return (
       <ThemedView style={[styles.container]}>
-        {categories.map(category => {
+        {/* {categories.map(category => {
           return(
             <ThemedView style={[styles.option]} key={category.id}>
               <ThemedView style={[styles.circle, {backgroundColor: category.color}]}/>
@@ -30,16 +30,34 @@ export function CategoriesByType({type = 'income'}: CategoriesByTypeProps) {
               </ThemedPressable>
             </ThemedView>
           );
-        })}
+        })} */}
+        <FlatList
+          data={categories}
+          keyExtractor={item => String(item.id)}
+          // ListHeaderComponent={<ThemedPressable type="floatButton" onPress={() => router.push('/add-category')} />}
+          renderItem={({item}) => {
+            return(
+            <ThemedView style={[styles.option]} key={item.id}>
+              <ThemedView style={[styles.circle, {backgroundColor: item.color}]}/>
+              <ThemedText style={[styles.name]}>{item.name}</ThemedText>
+              <ThemedPressable type="button" style={[styles.button]} onPress={() => handleDelete(item.id)}>
+                <ThemedText>Eliminar</ThemedText>
+              </ThemedPressable>
+            </ThemedView>
+            );
+          }}
+        />
       </ThemedView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    width: '100%',
-    display: 'flex',
-    flexDirection: 'column',
+    flex: 1,
+    // width: '100%',
+    // display: 'flex',
+    // flexDirection: 'column',
+    // flex: 1,
     // borderColor: "#fff",
     // borderWidth: 1,
   },
