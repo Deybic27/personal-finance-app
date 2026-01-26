@@ -21,6 +21,7 @@ export function ThemedTextInput({
                 type === 'default' ? styles.default : undefined,
                 style,
             ]}
+            placeholderTextColor="#757575"
             {...rest}
         />
     );
@@ -28,6 +29,7 @@ export function ThemedTextInput({
 
 const styles = StyleSheet.create({
   default: {
+    color: "#000",
     backgroundColor: '#f9f9f9',
     fontSize: 16,
     lineHeight: 24,

@@ -1,6 +1,7 @@
 import { useThemeColor } from '@/hooks/use-theme-color';
 import { Picker, type PickerProps } from '@react-native-picker/picker';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet } from 'react-native';
+import { ThemedView } from './themed-view';
 
 type PickerItem = {
   label: string;
@@ -28,7 +29,7 @@ export function ThemedPicker({
 }: ThemedPickerProps) {
     const color = useThemeColor({ light: lightColor, dark: darkColor }, 'text');
     return (
-        <View style={[
+        <ThemedView style={[
                 type === 'default' ? styles.default : undefined,
             ]}
             {...rest}
@@ -42,12 +43,13 @@ export function ThemedPicker({
                     <Picker.Item key={item.value} label={item.label} value={item.value} />
                 ))}
             </Picker>
-        </View>
+        </ThemedView>
     );
 }
 
 const styles = StyleSheet.create({
   default: {
+    color: "#000000",
     backgroundColor: '#f9f9f9',
     borderWidth: 1,
     borderColor: '#ccc',
