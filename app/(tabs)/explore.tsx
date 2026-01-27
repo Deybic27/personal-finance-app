@@ -48,7 +48,7 @@ export default function TabTwoScreen() {
       {/* INCOMES */}
       <Collapsible title="Ingresos">
         <ThemedText>
-          <ThemedPressable onPress={() => router.push({pathname: '/categories', params: {type: "income"}})}>
+          <ThemedPressable onPress={() => router.push('/list-income-categories')}>
             <ThemedText type="link">Categorías</ThemedText>
           </ThemedPressable>
         </ThemedText>
@@ -61,7 +61,7 @@ export default function TabTwoScreen() {
       {/* EXPENSES */}
       <Collapsible title="Gastos">
         <ThemedText>
-          <ThemedPressable onPress={() => router.push({pathname: '/categories', params: {type: "expense"}})}>
+          <ThemedPressable onPress={() => router.push('/list-expense-categories')}>
             <ThemedText type="link">Categorías</ThemedText>
           </ThemedPressable>
         </ThemedText>

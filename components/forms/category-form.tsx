@@ -56,7 +56,7 @@ export function CategoryForm() {
                     <ThemedSectionText style={{ marginBottom: 12 }} type="subtitle">Nombre</ThemedSectionText>
                     <ThemedTextInput value={name} onChangeText={setName} type="default" placeholder="Ej: Comida" />
                 </ThemedSection>
-                <ThemedSectionText type="subtitle">Tipo:</ThemedSectionText>
+                <ThemedSectionText type="subtitle">Tipo</ThemedSectionText>
                 <ThemedSection>
                     <ThemedRadioGroup
                         value={type}

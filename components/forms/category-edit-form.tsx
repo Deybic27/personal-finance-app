@@ -94,11 +94,11 @@ export function CategoryEditForm({
                     <ThemedSectionText type="title">Editar categoría</ThemedSectionText>
                 </ThemedSection>
                 <ThemedSection>
-                    <ThemedSectionText style={{ marginBottom: 12 }} type="subtitle">Nombre de la categoría</ThemedSectionText>
+                    <ThemedSectionText style={{ marginBottom: 12 }} type="subtitle">Nombre</ThemedSectionText>
                     <ThemedTextInput value={name} onChangeText={setName} type="default" placeholder="Ej: Comida" />
                 </ThemedSection>
                 <ThemedSection>
-                    <ThemedSectionText type="subtitle">Tipo:</ThemedSectionText>
+                    <ThemedSectionText type="subtitle">Tipo</ThemedSectionText>
                     <ThemedSectionText>{nameType}</ThemedSectionText>
                 </ThemedSection>
                 <ThemedSection>
