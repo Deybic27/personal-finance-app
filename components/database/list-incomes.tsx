@@ -1,4 +1,5 @@
 import { getIncomesWithCategory } from "@/database/db";
+import { formatDate } from "@/utils/date";
 import { router, useFocusEffect } from "expo-router";
 import { useCallback, useState } from "react";
 import { FlatList, StyleSheet } from "react-native";
@@ -7,9 +8,17 @@ import { ThemedText } from "../themed-text";
 import { ThemedView } from "../themed-view";
 import { IncomeCard } from "../ui/income-card";
 
+type Incomes = {
+    id: number;
+    categoryColor: string;
+    categoryName: string;
+    amount: number;
+    date: string;
+    note: string;
+}
+
 export function ListIncomes() {
-    const [incomes, setIncomes] = useState(getIncomesWithCategory())
-    console.log("Incomes: ", incomes);
+    const [incomes, setIncomes] = useState<Incomes[]>([])
 
     useFocusEffect(
         useCallback(() => {
@@ -23,7 +32,6 @@ export function ListIncomes() {
                 data={incomes}
                 keyExtractor={item => item.id.toString()}
                 renderItem={({item}) => {
-                    const date = new Date(item.date).toISOString().split('T')[0]
                     return (
                         <ThemedView style={styles.sectionCard}>
                             <ThemedPressable onPress={() => router.push({pathname: '/edit-income', params: {id: item.id}})}>
@@ -31,7 +39,7 @@ export function ListIncomes() {
                                     colorCategory={item.categoryColor}
                                     nameCategory={item.categoryName}
                                     amount={item.amount}
-                                    date={date}
+                                    date={formatDate(item.date)}
                                     note={item.note}
                                 />
                             </ThemedPressable>
@@ -52,6 +60,5 @@ const styles = StyleSheet.create({
     },
     sectionCard: {
         padding: 10,
-        backgroundColor: "#fff"
     },
 })

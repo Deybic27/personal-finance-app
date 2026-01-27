@@ -1,4 +1,5 @@
-import { getCategoriesByType, getIncomeById, updateIncome } from "@/database/db";
+import { deleteIncome, getCategoriesByType, getIncomeById, updateIncome } from "@/database/db";
+import { formatDate } from "@/utils/date";
 import { Image } from "expo-image";
 import { router, useFocusEffect } from "expo-router";
 import { useCallback, useState } from "react";
@@ -16,64 +17,88 @@ type IncomeEditFormProps = {
   incomeId: number
 }
 
+type Category = {
+  label: string;
+  value: string;
+};
+
 export function IncomeEditForm({
   incomeId
 }: IncomeEditFormProps){
   const [amount, setAmount] = useState('')
   const [category, setCategory] = useState('')
-  const [date, setDate] = useState(new Date())
+  const [date, setDate] = useState('')
   const [note, setNote] = useState('')
   
-    const [categories, setCategories] = useState([{label: '', value: ''}]);
-      useFocusEffect(
-        useCallback(() => {
-          const data = getCategoriesByType('income');
+  const [categories, setCategories] = useState<Category[]>([]);
+  useFocusEffect(
+    useCallback(() => {
+      const data = getCategoriesByType('income');
 
-          setCategories(
-            data.map(category => ({
-              label: category.name,
-              value: String(category.id),
-            }))
-          );
-
-          const currentIncome = getIncomeById(incomeId)
-          setAmount(String(currentIncome?.amount));
-          setCategory(String(currentIncome?.category));
-          setDate(new Date(String(currentIncome?.date)));
-          setNote(String(currentIncome?.note));
-        }, [])
+      setCategories(
+        data.map(category => ({
+          label: category.name,
+          value: String(category.id),
+        }))
       );
 
-      function handleSubmit() {
-            if (!amount) {
-            Alert.alert('Error', 'El monto es obligatorio');
-            return;
-            }
-            if (!category) {
-            Alert.alert('Error', 'La categoria es obligatoria');
-            return;
-            }
-            if (!date) {
-            Alert.alert('Error', 'La fecha es obligatoria');
-            return;
-            }
-      
-            
-            const expenseAmount = parseInt(amount)
-            const expenseDate = date.toLocaleDateString('en-CA')
-            // return(console.log(amount, category, date, note));
-            // return(console.log(expenseAmount, category, expenseDate, note));
-            console.log("Insert Income: ", expenseAmount, category, expenseDate, note);
-            updateIncome(
-              incomeId,
-              expenseAmount,
-              category,
-              expenseDate,
-              note
-            );
-      
-            router.back();
+      const currentIncome = getIncomeById(incomeId)
+      setAmount(String(currentIncome?.amount));
+      setCategory(String(currentIncome?.category));
+      setDate(String(currentIncome?.date));
+      setNote(String(currentIncome?.note));
+    }, [])
+  );
+
+  function handleSubmit() {
+        if (!amount) {
+        Alert.alert('Error', 'El monto es obligatorio');
+        return;
         }
+        if (!category) {
+        Alert.alert('Error', 'La categoria es obligatoria');
+        return;
+        }
+        if (!date) {
+        Alert.alert('Error', 'La fecha es obligatoria');
+        return;
+        }
+
+        const exists = getIncomeById(incomeId);
+        if(!exists) { 
+          Alert.alert("Error", "Ingreso no existe");
+          return null;
+        }
+  
+        const expenseAmount = parseInt(amount)
+        const incomeDate = formatDate(date, 'db')
+        // return(console.log(amount, category, date, note));
+        // return(console.log(expenseAmount, category, incomeDate, note));
+        updateIncome(
+          incomeId,
+          expenseAmount,
+          category,
+          incomeDate,
+          note
+        );
+        console.log("Update Income: ", expenseAmount, category, incomeDate, note);
+        Alert.alert("Mensaje", "Ingreso actualizado");
+
+        router.back();
+    }
+
+    function handleDelete() {
+      const exists = getIncomeById(incomeId);
+      if(!exists) { 
+          Alert.alert("Error", "El ingreso no existe");
+          return;
+      }
+      deleteIncome(incomeId);
+      console.log("Delete Income", incomeId);
+      Alert.alert("Mensaje", "El ingreso ha sido eliminado");
+
+      router.back();
+    }
     return (
         <ParallaxScrollView
               headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
@@ -110,6 +135,9 @@ export function IncomeEditForm({
               <ThemedView style={styles.stepContainer}>
                 <ThemedPressable type="button" onPress={handleSubmit}>
                   <ThemedText type="button">Guardar</ThemedText>
+                </ThemedPressable>
+                <ThemedPressable type="buttonDelete" onPress={handleDelete}>
+                  <ThemedText type="button">Eliminar</ThemedText>
                 </ThemedPressable>
               </ThemedView>
             </ParallaxScrollView>

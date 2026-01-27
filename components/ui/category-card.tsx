@@ -1,45 +1,39 @@
+import { useThemeColor } from "@/hooks/use-theme-color";
 import { StyleSheet } from "react-native";
+import { ThemedSection } from "../themed-section";
 import { ThemedText } from "../themed-text";
-import { ThemedView } from "../themed-view";
 import { ColorInput } from "./color-input";
 
 type CategoryCardProps = {
-    colorCategory ?: string; 
-    nameCategory ?: string; 
-    amount ?: number; 
-    note ?: string;
-    date ?: string;
+    color ?: string; 
+    name ?: string; 
+    button ?: string;
+    lightColor?: string;
+    darkColor?: string;
 }
 
 export function CategoryCard({
-    colorCategory,
-    nameCategory,
-    amount,
-    note,
-    date
+    color,
+    name,
+    button,
+    lightColor,
+    darkColor,
 }: CategoryCardProps) {
+    const textColor = useThemeColor({ light: lightColor, dark: darkColor }, 'textSection');
     return (
-        <ThemedView style={styles.container}>
-            <ThemedView style={styles.firtsLine}>
-                <ThemedView style={[styles.firtsColumn, styles.column]}>
-                    <ColorInput color={colorCategory}/>
-                </ThemedView>
-                <ThemedView style={[styles.secondColumn, styles.column]}>
-                    <ThemedText>{nameCategory}</ThemedText>
-                </ThemedView>
-                <ThemedView style={[styles.thirdColumn, styles.column]}>
-                    <ThemedText>{amount}</ThemedText>
-                </ThemedView>
-            </ThemedView>
-            <ThemedView style={styles.secondLine}>
-                <ThemedView>
-                    <ThemedText>{date}</ThemedText>
-                </ThemedView>
-                <ThemedView>
-                    <ThemedText>{note}</ThemedText>
-                </ThemedView>
-            </ThemedView>
-        </ThemedView>
+        <ThemedSection style={styles.container}>
+            <ThemedSection style={styles.firtsLine}>
+                <ThemedSection style={[styles.firtsColumn, styles.column]}>
+                    <ColorInput color={color}/>
+                </ThemedSection>
+                <ThemedSection style={[styles.secondColumn, styles.column]}>
+                    <ThemedText style={[{color: textColor}]}>{name}</ThemedText>
+                </ThemedSection>
+                <ThemedSection style={[styles.thirdColumn, styles.column]}>
+                    <ThemedText>{button}</ThemedText>
+                </ThemedSection>
+            </ThemedSection>
+        </ThemedSection>
     );
 }
 

@@ -1,22 +1,41 @@
-import { deleteCategory, getCategoriesByType } from "@/database/db";
-import { useState } from "react";
+import { getCategoriesByType } from "@/database/db";
+import { router, useFocusEffect } from "expo-router";
+import { useCallback, useState } from "react";
 import { FlatList, StyleSheet } from "react-native";
 import { ThemedPressable } from "../themed-pressable";
-import { ThemedText } from "../themed-text";
 import { ThemedView } from "../themed-view";
+import { CategoryCard } from "../ui/category-card";
 
 type CategoriesByTypeProps = {
   type: string
 }
 
+type Category = {
+  id: number;
+  name: string;
+  color: string;
+};
+
 export function CategoriesByType({type = 'income'}: CategoriesByTypeProps) {
 
-  const [categories, setCategories] = useState(getCategoriesByType(type))
+  const [categories, setCategories] = useState<Category[]>([])
 
-  function handleDelete(id: number) {
-    deleteCategory(id)
-    setCategories(getCategoriesByType(type))
-  }
+  useFocusEffect(
+      useCallback(() => {
+          setCategories(getCategoriesByType(type));
+      }, [])
+  );
+
+  // function handleDelete(id: number) {
+  //   const exists = getCategory(id)
+  //   if(!exists) { 
+  //     Alert.alert("Error", "La categoria no existe");
+  //     return;
+  //   }
+  //   deleteCategory(id)
+  //   setCategories(getCategoriesByType(type))
+  //   Alert.alert("Error", "La categoria ha sido eliminada");
+  // }
 
   return (
       <ThemedView style={[styles.container]}>
@@ -36,13 +55,14 @@ export function CategoriesByType({type = 'income'}: CategoriesByTypeProps) {
           keyExtractor={item => String(item.id)}
           renderItem={({item}) => {
             return(
-            <ThemedView style={[styles.option]} key={item.id}>
-              <ThemedView style={[styles.circle, {backgroundColor: item.color}]}/>
-              <ThemedText style={[styles.name]}>{item.name}</ThemedText>
-              <ThemedPressable type="button" style={[styles.button]} onPress={() => handleDelete(item.id)}>
-                <ThemedText>Eliminar</ThemedText>
-              </ThemedPressable>
-            </ThemedView>
+              <ThemedView style={[styles.sectionCard]}>
+                <ThemedPressable onPress={() => router.push({pathname: '/edit-category', params: {id: item.id}})}>
+                  <CategoryCard
+                    color={item.color}
+                    name={item.name}
+                  />
+                </ThemedPressable>
+              </ThemedView>
             );
           }}
         />
@@ -53,13 +73,16 @@ export function CategoriesByType({type = 'income'}: CategoriesByTypeProps) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
+    // padding: 20,
     // width: '100%',
     // display: 'flex',
     // flexDirection: 'column',
     // flex: 1,
     // borderColor: "#fff",
     // borderWidth: 1,
+  },
+  sectionCard: {
+      padding: 10,
   },
   option: {
     width: '100%',

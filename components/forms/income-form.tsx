@@ -1,4 +1,5 @@
 import { getCategoriesByType, insertIncome } from "@/database/db";
+import { formatDate } from "@/utils/date";
 import { Image } from "expo-image";
 import { router, useFocusEffect } from "expo-router";
 import { useCallback, useState } from "react";
@@ -12,13 +13,18 @@ import { ThemedText } from "../themed-text";
 import { ThemedTextInput } from "../themed-text-input";
 import { ThemedView } from "../themed-view";
 
+type Category = {
+  label: string;
+  value: string;
+};
+
 export function IncomeForm(){
   const [amount, setAmount] = useState('')
   const [category, setCategory] = useState('')
-  const [date, setDate] = useState(new Date())
+  const [date, setDate] = useState('')
   const [note, setNote] = useState('')
 
-    const [categories, setCategories] = useState([{label: '', value: ''}]);
+    const [categories, setCategories] = useState<Category[]>([]);
       useFocusEffect(
         useCallback(() => {
           const data = getCategoriesByType('income');
@@ -48,20 +54,19 @@ export function IncomeForm(){
             Alert.alert('Error', 'La fecha es obligatoria');
             return;
             }
-      
-            
+
             const expenseAmount = parseInt(amount)
-            const expenseDate = date.toLocaleDateString('en-CA')
-            // return(console.log(amount, category, date, note));
-            // return(console.log(expenseAmount, category, expenseDate, note));
-            console.log("Insert Income: ", expenseAmount, category, expenseDate, note);
+            const incomeDate = formatDate(date, 'db')
+
             insertIncome(
-                expenseAmount,
-                category,
-                expenseDate,
-                note
+              expenseAmount,
+              category,
+              incomeDate,
+              note
             );
-      
+            console.log("Insert Income: ", expenseAmount, category, incomeDate, note);
+            Alert.alert("Mensaje", "Ingreso guardado");
+
             router.back();
         }
     return (

@@ -1,3 +1,4 @@
+import { formatDate } from '@/utils/date';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useState } from "react";
 import { ThemedPressable } from './themed-pressable';
@@ -5,8 +6,8 @@ import { ThemedText } from './themed-text';
 import { ThemedView } from "./themed-view";
 
 type ThemedDateInputProps = {
-  value: Date;
-  onChange: (value: Date) => void;
+  value: string;
+  onChange: (value: string) => void;
 }
 
 export function ThemedDateInput({
@@ -14,23 +15,23 @@ export function ThemedDateInput({
   onChange
 }: ThemedDateInputProps) {
   const [show, setShow] = useState(false);
-  console.log(value.toLocaleDateString('en-CA'));
+  const date = value ? value : new Date()
   return (
     <ThemedView>
         <ThemedPressable type="date" onPress={() => setShow(true)}>
-            <ThemedText type='date'>{value ? value.toLocaleDateString('en-CA') : "Seleccionar fecha"}</ThemedText>
+            <ThemedText type='date'>{date ? formatDate(date) : "Seleccionar fecha"}</ThemedText>
             {/* value.toISOString().split('T')[0] */}
         </ThemedPressable>
 
         {show && (
         <DateTimePicker
-            value={value}
-            mode="date"
-            display="default"
-            onChange={(event, selectedDate) => {
+          value={new Date(date)}
+          mode="date"
+          display="default"
+          onChange={(event, selectedDate) => {
             setShow(false);
-            if (selectedDate) onChange(selectedDate);
-            }}
+            if (selectedDate) onChange(formatDate(selectedDate, 'db'));
+          }}
         />
         )}
     </ThemedView>

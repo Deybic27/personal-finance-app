@@ -1,4 +1,5 @@
 import { getExpensesWithCategory } from "@/database/db";
+import { formatDate } from "@/utils/date";
 import { router, useFocusEffect } from "expo-router";
 import { useCallback, useState } from "react";
 import { FlatList, StyleSheet } from "react-native";
@@ -7,8 +8,17 @@ import { ThemedText } from "../themed-text";
 import { ThemedView } from "../themed-view";
 import { ExpenseCard } from "../ui/expense-card";
 
+type Expenses = {
+    id: number;
+    categoryColor: string;
+    categoryName: string;
+    amount: number;
+    date:string;
+    note: string;
+}
+
 export function ListExpenses() {
-    const [expenses, setExpenses] = useState(getExpensesWithCategory())
+    const [expenses, setExpenses] = useState<Expenses[]>([])
 
     useFocusEffect(
         useCallback(() => {
@@ -21,7 +31,7 @@ export function ListExpenses() {
                 data={expenses}
                 keyExtractor={item => item.id.toString()}
                 renderItem={({item}) => {
-                    const date = new Date(item.date).toISOString().split('T')[0]
+                    // const date = new Date(item.date).toISOString().split('T')[0]
                     return (
                         <ThemedView style={styles.sectionCard}>
                             <ThemedPressable onPress={() => router.push({pathname: '/edit-expense', params: {id: item.id}})}>
@@ -29,7 +39,7 @@ export function ListExpenses() {
                                     colorCategory={item.categoryColor}
                                     nameCategory={item.categoryName}
                                     amount={item.amount}
-                                    date={date}
+                                    date={formatDate(item.date)}
                                     note={item.note}
                                 />
                             </ThemedPressable>
@@ -50,6 +60,5 @@ const styles = StyleSheet.create({
     },
     sectionCard: {
         padding: 10,
-        backgroundColor: "#fff"
     },
 })

@@ -1,4 +1,5 @@
-import { getCategoriesByType, getExpenseById, updateExpense } from "@/database/db";
+import { deleteExpense, getCategoriesByType, getExpenseById, updateExpense } from "@/database/db";
+import { formatDate } from "@/utils/date";
 import { Image } from "expo-image";
 import { router, useFocusEffect } from "expo-router";
 import { useCallback, useState } from "react";
@@ -16,15 +17,20 @@ type ExpenseEditFormProps = {
   expenseId: number
 }
 
+type Category = {
+  label: string;
+  value: string;
+};
+
 export function ExpenseEditForm({
   expenseId
 }: ExpenseEditFormProps){
   const [amount, setAmount] = useState('')
   const [category, setCategory] = useState('')
-  const [date, setDate] = useState(new Date())
+  const [date, setDate] = useState('')
   const [note, setNote] = useState('')
   
-    const [categories, setCategories] = useState([{label: '', value: ''}]);
+    const [categories, setCategories] = useState<Category[]>([]);
       useFocusEffect(
         useCallback(() => {
           const data = getCategoriesByType('expense');
@@ -39,7 +45,7 @@ export function ExpenseEditForm({
           const currentExpense = getExpenseById(expenseId)
           setAmount(String(currentExpense?.amount));
           setCategory(String(currentExpense?.category));
-          setDate(new Date(String(currentExpense?.date)));
+          setDate(String(currentExpense?.date));
           setNote(String(currentExpense?.note));
         }, [])
       );
@@ -57,13 +63,19 @@ export function ExpenseEditForm({
             Alert.alert('Error', 'La fecha es obligatoria');
             return;
             }
+
+            const exists = getExpenseById(expenseId);
+            if(!exists) { 
+              Alert.alert("Error", "Ingreso no existe");
+              return;
+            }
       
             
             const expenseAmount = parseInt(amount)
-            const expenseDate = date.toLocaleDateString('en-CA')
+            const expenseDate = formatDate(date, 'db')
             // return(console.log(amount, category, date, note));
             // return(console.log(expenseAmount, category, expenseDate, note));
-            console.log("Update Expense: ", expenseId, expenseAmount, category, expenseDate, note);
+            // console.log("Update Expense: ", expenseId, expenseAmount, category, expenseDate, note);
             updateExpense(
               expenseId,
               expenseAmount,
@@ -71,9 +83,24 @@ export function ExpenseEditForm({
               expenseDate,
               note
             );
-      
+            console.log("Update Expense: ", expenseId, expenseAmount, category, expenseDate, note);
+            Alert.alert("Mensaje", "Gasto actualizado");
+
             router.back();
         }
+
+    function handleDelete() {
+      const exists = getExpenseById(expenseId);
+      if(!exists) { 
+          Alert.alert("Error", "El gasto no existe");
+          return;
+      }
+      deleteExpense(expenseId);
+      console.log("Delete Expense", expenseId);
+      Alert.alert("Mensaje", "El gasto ha sido eliminado");
+
+      router.back();
+    }
     return (
         <ParallaxScrollView
               headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
@@ -85,7 +112,7 @@ export function ExpenseEditForm({
               }
           >
               <ThemedView style={styles.titleContainer}>
-                <ThemedText type="title">Editar ingreso</ThemedText>
+                <ThemedText type="title">Editar gasto</ThemedText>
                 <HelloWave />
               </ThemedView>
               <ThemedView style={styles.stepContainer}>
@@ -110,6 +137,9 @@ export function ExpenseEditForm({
               <ThemedView style={styles.stepContainer}>
                 <ThemedPressable type="button" onPress={handleSubmit}>
                   <ThemedText type="button">Guardar</ThemedText>
+                </ThemedPressable>
+                <ThemedPressable type="buttonDelete" onPress={handleDelete}>
+                  <ThemedText type="button">Eliminar</ThemedText>
                 </ThemedPressable>
               </ThemedView>
             </ParallaxScrollView>

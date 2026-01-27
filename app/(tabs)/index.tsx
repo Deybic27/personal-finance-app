@@ -13,10 +13,9 @@ import { getSaldo, getTotalExpenses, getTotalIncomes } from '../../database/db';
 
 export default function HomeScreen() {
 
-  const [totalAmountIncomes, setTotalAmountIncomes] = useState(getTotalIncomes());
-  const [totalAmountExpenses, setTotalAmountExpenses] = useState(getTotalExpenses());
-  const [saldo, setSaldo] = useState(getSaldo());
-  console.log(saldo);
+  const [totalAmountIncomes, setTotalAmountIncomes] = useState(0);
+  const [totalAmountExpenses, setTotalAmountExpenses] = useState(0);
+  const [saldo, setSaldo] = useState(0);
 
   useFocusEffect(
       useCallback(() => {

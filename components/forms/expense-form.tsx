@@ -6,6 +6,7 @@ import ParallaxScrollView from '@/components/parallax-scroll-view';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { getCategoriesByType, getExpenses, insertExpense } from '@/database/db';
+import { formatDate } from '@/utils/date';
 import { router, useFocusEffect } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { ThemedDateInput } from '../themed-date-input';
@@ -13,13 +14,18 @@ import { ThemedPicker } from '../themed-picker';
 import { ThemedPressable } from '../themed-pressable';
 import { ThemedTextInput } from '../themed-text-input';
 
+type Category = {
+  label: string;
+  value: string;
+};
+
 export function ExpenseForm() {
   const [amount, setAmount] = useState('')
   const [category, setCategory] = useState('')
-  const [date, setDate] = useState(new Date())
+  const [date, setDate] = useState('')
   const [note, setNote] = useState('')
 
-  const [categories, setCategories] = useState([{label: '', value: ''}]);
+  const [categories, setCategories] = useState<Category[]>([]);
   useFocusEffect(
     useCallback(() => {
       const data = getCategoriesByType('expense');
@@ -51,16 +57,17 @@ export function ExpenseForm() {
     }
 
     const expenseAmount = parseInt(amount)
-    const expenseDate = date.toLocaleDateString('en-CA')
+    const expenseDate = formatDate(date, 'db')
 
-    console.log("Insert Expense: ", expenseAmount, category, expenseDate, note);
     insertExpense(
-        expenseAmount,
-        category,
-        expenseDate,
-        note
+      expenseAmount,
+      category,
+      expenseDate,
+      note
     );
-
+    console.log("Insert Expense: ", expenseAmount, category, expenseDate, note);
+    Alert.alert("Mensaje", "Gasto guardado");
+    
     router.back();
   }
   

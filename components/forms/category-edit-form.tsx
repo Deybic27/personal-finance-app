@@ -1,20 +1,37 @@
-import { getCategoryByName, insertCategory } from "@/database/db";
+import { deleteCategory, getCategory, getCategoryCountRecords, updateCategory } from "@/database/db";
+import { getTransactionTypeName, getTransactionTypeTable, TransactionType } from "@/utils/transaction-type";
 import { Image } from "expo-image";
-import { router } from "expo-router";
-import { useState } from "react";
+import { router, useFocusEffect } from "expo-router";
+import { useCallback, useState } from "react";
 import { Alert, StyleSheet } from "react-native";
 import ParallaxScrollView from "../parallax-scroll-view";
 import { ThemedPressable } from "../themed-pressable";
-import { ThemedRadioGroup } from "../themed-radio-group";
 import { ThemedSelectColor } from "../themed-select-color";
 import { ThemedText } from "../themed-text";
 import { ThemedTextInput } from "../themed-text-input";
 import { ThemedView } from "../themed-view";
 
-export function CategoryForm() {
+type CategoryEditFormProps = {
+    categoryId: number;
+}
+
+export function CategoryEditForm({
+    categoryId
+}: CategoryEditFormProps) {
     const [name, setName] = useState('');
-    const [type, setType] = useState('income');
-    const [color, setColor] = useState('red');
+    const [type, setType] = useState<TransactionType>();
+    const [nameType, setNameType] = useState('')
+    const [color, setColor] = useState('');
+
+    useFocusEffect(
+        useCallback(() => {
+            const currentCategory = getCategory(categoryId)
+            setName(String(currentCategory?.name));
+            setType(currentCategory?.type);
+            setColor(String(currentCategory?.color));
+            if(currentCategory?.type) setNameType(getTransactionTypeName(currentCategory?.type))
+        }, [])
+    );
 
     function handleSubmit() {
         if (!name) {
@@ -30,20 +47,44 @@ export function CategoryForm() {
         return;
         }
 
-        if (getCategoryByName(name, type).length > 0) {
-            Alert.alert('Error', 'La categoría ya existe');
-            return;
+        const exists = getCategory(categoryId);
+        if(!exists) { 
+            Alert.alert("Error", "Categoria no existe");
+            return null;
         }
 
-        insertCategory(
+        updateCategory(
+            categoryId,
             name,
-            type,
             color
         );
-        console.log("Insert Category: ", name, type, color);
-        Alert.alert("Mensaje", "La categoria ha sido creada");
-
+        console.log("Update Category: ", categoryId, name, color);
+        Alert.alert("Mensaje", "La categoria ha sido actualizada");
+        
         router.back();
+    }
+
+    function handleDelete() {
+        const exists = getCategory(categoryId);
+        if(!exists) { 
+            Alert.alert("Error", "La categoria no existe");
+            return;
+        }
+        
+        if (type) {
+            const table = getTransactionTypeTable(type);
+            const countRecords = getCategoryCountRecords(table, categoryId.toString());
+            if(countRecords > 0) {
+                Alert.alert("Error", `La categoria no se puede eliminar, tiene ${countRecords} registros asignados.`);
+                return;
+            }
+            deleteCategory(categoryId)
+            console.log("Delete Category: ", categoryId);
+            Alert.alert("Mensaje", "La categoria ha sido eliminada");
+    
+            router.back();
+        }
+
     }
 
     return (
@@ -63,16 +104,9 @@ export function CategoryForm() {
                 <ThemedText style={{ marginBottom: 12 }} type="subtitle">Nombre de la categoría</ThemedText>
                 <ThemedTextInput value={name} onChangeText={setName} type="default" placeholder="Ej: Comida" />
             </ThemedView>
-            <ThemedText type="subtitle">Tipo:</ThemedText>
             <ThemedView>
-                <ThemedRadioGroup
-                    value={type}
-                    onChange={setType}
-                    options={[
-                        { label: 'Ingreso', value: 'income' },
-                        { label: 'Gasto', value: 'expense' },
-                    ]}
-                />
+                <ThemedText type="subtitle">Tipo:</ThemedText>
+                <ThemedText>{nameType}</ThemedText>
             </ThemedView>
             <ThemedView>
                 <ThemedText type="subtitle">Color</ThemedText>
@@ -88,7 +122,10 @@ export function CategoryForm() {
             </ThemedView>
             <ThemedView style={styles.stepContainer}>
                 <ThemedPressable type="button" onPress={handleSubmit}>
-                    <ThemedText type="button">Guardar categoría</ThemedText>
+                    <ThemedText type="button">Guardar</ThemedText>
+                </ThemedPressable>
+                <ThemedPressable type="buttonDelete" onPress={handleDelete}>
+                    <ThemedText type="button">Eliminar</ThemedText>
                 </ThemedPressable>
             </ThemedView>
         </ParallaxScrollView>

@@ -4,7 +4,7 @@ import { Pressable, StyleSheet, type PressableProps } from "react-native";
 export type ThemedPressableProps = PressableProps & {
   lightColor?: string;
   darkColor?: string;
-  type?: 'default' | 'button' | 'date' | 'floatButton';
+  type?: 'default' | 'button' | 'date' | 'floatButton' | 'buttonDelete';
 };
 
 export function ThemedPressable({
@@ -20,6 +20,7 @@ export function ThemedPressable({
             style={[
                 type === 'default' ? styles.default : undefined,
                 type === 'button' ? styles.button : undefined,
+                type === 'buttonDelete' ? styles.buttonDelete : undefined,
                 type === 'floatButton' ? styles.floatButton : undefined,
                 type === 'date' ? styles.date : undefined,
                 style,
@@ -34,6 +35,12 @@ const styles = StyleSheet.create({
     },
     button: {
         backgroundColor: '#0a7ea4',
+        paddingVertical: 12,
+        paddingHorizontal: 20,
+        borderRadius: 5,
+    },
+    buttonDelete: {
+        backgroundColor: '#a40a0a',
         paddingVertical: 12,
         paddingHorizontal: 20,
         borderRadius: 5,

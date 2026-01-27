@@ -14,7 +14,11 @@ export const unstable_settings = {
 export default function RootLayout() {
   const colorScheme = useColorScheme();
   useEffect(() => {
-    initDatabase()
+    try {
+      initDatabase()
+    } catch (error) {
+      console.error("Error al inicializar la DB: ", error)
+    }
   }, []);
 
   return (

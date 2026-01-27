@@ -1,3 +1,4 @@
+import { TransactionType } from '@/utils/transaction-type';
 import * as SQLite from 'expo-sqlite';
 
 export const db = SQLite.openDatabaseSync('finance.db');
@@ -139,6 +140,76 @@ export function insertCategory(
   }
 }
 
+export function updateCategory(
+  id: number,
+  name: string,
+  color: string
+) {
+  try {
+    db.runSync(
+      `
+      UPDATE categories
+      SET name = ?, color = ?
+      WHERE id = ?
+      `,
+      [name, color, id]
+    );
+  } catch (error) {
+    console.error('Error to update category: ', error);
+    throw new Error('Failed to update category')
+  }
+}
+
+export function deleteCategory(id: number) {
+  try {
+    db.runSync(
+      `DELETE FROM categories WHERE id = ?`,
+      [id]
+    );
+  } catch (error) {
+    console.error('Error to delete category: ', error);
+    throw new Error('Failed to delete category')
+  }
+}
+
+export function getCategory(id: number) {
+  try {
+    const result = db.getFirstSync<{ id: number; name: string; type: TransactionType; color: string }>(`
+      SELECT * FROM categories
+      WHERE id = ?
+    `, [id]);
+    return result;
+  } catch (error) {
+    console.error('Error to get category: ', error);
+    throw new Error('Failed to get category')
+  }
+}
+
+export function getCategoryByName(name: string, type: string = 'income') {
+  try {
+    return db.getAllSync(
+      `SELECT * FROM categories WHERE name = ? AND type = ?`,
+      [name, type]
+    );
+  } catch (error) {
+    console.error('Error to get category by name: ', error);
+    throw new Error('Failed to get category by name')
+  }
+}
+
+export function getCategoryCountRecords(table: string, category: string) {
+  try {
+    const result = db.getFirstSync<{countRecords: number}>(
+      `SELECT COUNT(*) AS countRecords FROM ${table} WHERE category = ?`,
+      [category]
+    );
+    return result ? result.countRecords : 0;
+  } catch (error) {
+    console.error('Error to get category by name: ', error);
+    throw new Error('Failed to get category by name')
+  }
+}
+
 export function getExpenses() {
   try {
     return db.getAllSync(`
@@ -156,7 +227,6 @@ export function getExpenseById(id: number) {
     const result = db.getFirstSync<{ id: number; amount: number; category: number; date: string, note: string }>(`
       SELECT * FROM expenses
       WHERE id = ?
-      ORDER BY date DESC
     `, [id]);
     return result;
   } catch (error) {
@@ -204,7 +274,6 @@ export function getIncomeById(id: number) {
     const result = db.getFirstSync<{ id: number; amount: number; category: number; date: string, note: string }>(`
       SELECT * FROM incomes
       WHERE id = ?
-      ORDER BY date DESC
     `, [id]);
     return result;
   } catch (error) {
@@ -325,42 +394,6 @@ export function deleteIncome(id: number) {
   } catch (error) {
     console.error('Error to delete income: ', error);
     throw new Error('Failed to delete income')
-  }
-}
-
-export function deleteCategory(id: number) {
-  try {
-    db.runSync(
-      `DELETE FROM categories WHERE id = ?`,
-      [id]
-    );
-  } catch (error) {
-    console.error('Error to delete category: ', error);
-    throw new Error('Failed to delete category')
-  }
-}
-
-export function getCategory(id: number) {
-  try {
-    return db.getAllSync(
-      `SELECT * FROM categories WHERE id = ?`,
-      [id]
-    );
-  } catch (error) {
-    console.error('Error to get category: ', error);
-    throw new Error('Failed to get category')
-  }
-}
-
-export function getCategoryByName(name: string, type: string = 'income') {
-  try {
-    return db.getAllSync(
-      `SELECT * FROM categories WHERE name = ? AND type = ?`,
-      [name, type]
-    );
-  } catch (error) {
-    console.error('Error to get category by name: ', error);
-    throw new Error('Failed to get category by name')
   }
 }
 
