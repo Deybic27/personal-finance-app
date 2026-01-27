@@ -21,16 +21,13 @@ type Category = {
 export function IncomeForm(){
   const [amount, setAmount] = useState('')
   const [category, setCategory] = useState('')
-  const [date, setDate] = useState('')
+  const [date, setDate] = useState(new Date())
   const [note, setNote] = useState('')
 
     const [categories, setCategories] = useState<Category[]>([]);
       useFocusEffect(
         useCallback(() => {
           const data = getCategoriesByType('income');
-          // console.log("Categorías de Incomes: ", data);
-          // const dataIncomes = getIncomes();
-          // console.log("Incomes: ", dataIncomes);
 
           setCategories(
             data.map(category => ({

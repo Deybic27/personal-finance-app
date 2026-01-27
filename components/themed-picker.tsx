@@ -35,6 +35,7 @@ export function ThemedPicker({
             {...rest}
         >
             <Picker
+                style={[{color: "#000"}]}
                 selectedValue={value}
                 onValueChange={(itemValue) => onChange(itemValue)}
             >
@@ -49,7 +50,6 @@ export function ThemedPicker({
 
 const styles = StyleSheet.create({
   default: {
-    color: "#000000",
     backgroundColor: '#f9f9f9',
     borderWidth: 1,
     borderColor: '#ccc',

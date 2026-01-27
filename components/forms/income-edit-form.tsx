@@ -27,7 +27,7 @@ export function IncomeEditForm({
 }: IncomeEditFormProps){
   const [amount, setAmount] = useState('')
   const [category, setCategory] = useState('')
-  const [date, setDate] = useState('')
+  const [date, setDate] = useState(new Date())
   const [note, setNote] = useState('')
   
   const [categories, setCategories] = useState<Category[]>([]);
@@ -45,7 +45,7 @@ export function IncomeEditForm({
       const currentIncome = getIncomeById(incomeId)
       setAmount(String(currentIncome?.amount));
       setCategory(String(currentIncome?.category));
-      setDate(String(currentIncome?.date));
+      setDate(new Date(String(currentIncome?.date)));
       setNote(String(currentIncome?.note));
     }, [])
   );

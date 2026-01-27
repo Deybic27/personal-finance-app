@@ -22,7 +22,7 @@ type Category = {
 export function ExpenseForm() {
   const [amount, setAmount] = useState('')
   const [category, setCategory] = useState('')
-  const [date, setDate] = useState('')
+  const [date, setDate] = useState(new Date())
   const [note, setNote] = useState('')
 
   const [categories, setCategories] = useState<Category[]>([]);

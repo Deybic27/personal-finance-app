@@ -6,8 +6,8 @@ import { ThemedSection } from './themed-section';
 import { ThemedSectionText } from './themed-section-text';
 
 type ThemedDateInputProps = {
-  value: string;
-  onChange: (value: string) => void;
+  value: Date;
+  onChange: (value: Date) => void;
 }
 
 export function ThemedDateInput({
@@ -15,21 +15,21 @@ export function ThemedDateInput({
   onChange
 }: ThemedDateInputProps) {
   const [show, setShow] = useState(false);
-  const date = value ? value : new Date()
+  console.log("value: ", value);
   return (
     <ThemedSection>
         <ThemedPressable type="date" onPress={() => setShow(true)}>
-            <ThemedSectionText type='date'>{date ? formatDate(date) : "Seleccionar fecha"}</ThemedSectionText>
+            <ThemedSectionText type='date'>{value ? formatDate(value) : "Seleccionar fecha"}</ThemedSectionText>
         </ThemedPressable>
 
         {show && (
         <DateTimePicker
-          value={new Date(date)}
+          value={value}
           mode="date"
           display="default"
           onChange={(event, selectedDate) => {
             setShow(false);
-            if (selectedDate) onChange(formatDate(selectedDate, 'db'));
+            if (selectedDate) onChange(selectedDate);
           }}
         />
         )}

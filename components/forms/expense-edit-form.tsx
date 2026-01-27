@@ -27,7 +27,7 @@ export function ExpenseEditForm({
 }: ExpenseEditFormProps){
   const [amount, setAmount] = useState('')
   const [category, setCategory] = useState('')
-  const [date, setDate] = useState('')
+  const [date, setDate] = useState(new Date())
   const [note, setNote] = useState('')
   
     const [categories, setCategories] = useState<Category[]>([]);
@@ -45,7 +45,7 @@ export function ExpenseEditForm({
           const currentExpense = getExpenseById(expenseId)
           setAmount(String(currentExpense?.amount));
           setCategory(String(currentExpense?.category));
-          setDate(String(currentExpense?.date));
+          setDate(new Date(String(currentExpense?.date)));
           setNote(String(currentExpense?.note));
         }, [])
       );
