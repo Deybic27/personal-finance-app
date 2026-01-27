@@ -1,17 +1,17 @@
-import { Image } from 'expo-image';
 import { Alert, StyleSheet } from 'react-native';
 
 import { HelloWave } from '@/components/hello-wave';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
 import { getCategoriesByType, getExpenses, insertExpense } from '@/database/db';
 import { formatDate } from '@/utils/date';
 import { router, useFocusEffect } from 'expo-router';
 import { useCallback, useState } from 'react';
+import { ThemedContainer } from '../themed-container';
 import { ThemedDateInput } from '../themed-date-input';
 import { ThemedPicker } from '../themed-picker';
 import { ThemedPressable } from '../themed-pressable';
+import { ThemedSection } from '../themed-section';
+import { ThemedSectionContainer } from '../themed-section-container';
+import { ThemedSectionText } from '../themed-section-text';
 import { ThemedTextInput } from '../themed-text-input';
 
 type Category = {
@@ -29,7 +29,7 @@ export function ExpenseForm() {
   useFocusEffect(
     useCallback(() => {
       const data = getCategoriesByType('expense');
-      console.log("Categorias de Expenses: ", data);
+      console.log("Categorías de Expenses: ", data);
       const dataExpenses = getExpenses();
       console.log("Expenses: ", dataExpenses);
 
@@ -48,7 +48,7 @@ export function ExpenseForm() {
       return;
     }
     if (!category) {
-      Alert.alert('Error', 'La categoria es obligatoria');
+      Alert.alert('Error', 'La categoría es obligatoria');
       return;
     }
     if (!date) {
@@ -72,43 +72,38 @@ export function ExpenseForm() {
   }
   
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Agregar gasto</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Monto</ThemedText>
-        <ThemedTextInput value={amount} onChangeText={setAmount} type="default" placeholder="Ej: 50000" keyboardType="numeric" />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Categoría</ThemedText>
-        <ThemedPicker type="default" items={categories} value={category} onChange={setCategory}/>
-        <ThemedPressable onPress={() => router.push('/add-category')}>
-          <ThemedText type="link">+ Agregar categoría</ThemedText>
-        </ThemedPressable>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Fecha</ThemedText>
-        <ThemedDateInput value={date} onChange={setDate} />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Notas adicionales</ThemedText>
-        <ThemedTextInput value={note} onChangeText={setNote} type="default" placeholder="Ej: Cena con amigos" />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedPressable type="button" onPress={handleSubmit}>
-          <ThemedText type="button">Guardar</ThemedText>
-        </ThemedPressable>
-      </ThemedView>
-    </ParallaxScrollView>
+    <ThemedContainer>
+      <ThemedSectionContainer>
+        <ThemedSection style={styles.titleContainer}>
+          <ThemedSectionText type="title">Agregar gasto</ThemedSectionText>
+          <HelloWave />
+        </ThemedSection>
+        <ThemedSection style={styles.stepContainer}>
+          <ThemedSectionText type="subtitle">Monto</ThemedSectionText>
+          <ThemedTextInput value={amount} onChangeText={setAmount} type="default" placeholder="Ej: 50000" keyboardType="numeric" />
+        </ThemedSection>
+        <ThemedSection style={styles.stepContainer}>
+          <ThemedSectionText type="subtitle">Categoría</ThemedSectionText>
+          <ThemedPicker type="default" items={categories} value={category} onChange={setCategory}/>
+          <ThemedPressable onPress={() => router.push('/add-category')}>
+            <ThemedSectionText type="link">+ Agregar categoría</ThemedSectionText>
+          </ThemedPressable>
+        </ThemedSection>
+        <ThemedSection style={styles.stepContainer}>
+          <ThemedSectionText type="subtitle">Fecha</ThemedSectionText>
+          <ThemedDateInput value={date} onChange={setDate} />
+        </ThemedSection>
+        <ThemedSection style={styles.stepContainer}>
+          <ThemedSectionText type="subtitle">Notas adicionales</ThemedSectionText>
+          <ThemedTextInput value={note} onChangeText={setNote} type="default" placeholder="Ej: Cena con amigos" />
+        </ThemedSection>
+        <ThemedSection style={styles.stepContainer}>
+          <ThemedPressable type="button" onPress={handleSubmit}>
+            <ThemedSectionText type="button">Guardar</ThemedSectionText>
+          </ThemedPressable>
+        </ThemedSection>
+      </ThemedSectionContainer>
+    </ThemedContainer>
   );
 }
 

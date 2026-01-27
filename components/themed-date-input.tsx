@@ -2,8 +2,8 @@ import { formatDate } from '@/utils/date';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useState } from "react";
 import { ThemedPressable } from './themed-pressable';
-import { ThemedText } from './themed-text';
-import { ThemedView } from "./themed-view";
+import { ThemedSection } from './themed-section';
+import { ThemedSectionText } from './themed-section-text';
 
 type ThemedDateInputProps = {
   value: string;
@@ -17,10 +17,9 @@ export function ThemedDateInput({
   const [show, setShow] = useState(false);
   const date = value ? value : new Date()
   return (
-    <ThemedView>
+    <ThemedSection>
         <ThemedPressable type="date" onPress={() => setShow(true)}>
-            <ThemedText type='date'>{date ? formatDate(date) : "Seleccionar fecha"}</ThemedText>
-            {/* value.toISOString().split('T')[0] */}
+            <ThemedSectionText type='date'>{date ? formatDate(date) : "Seleccionar fecha"}</ThemedSectionText>
         </ThemedPressable>
 
         {show && (
@@ -34,6 +33,6 @@ export function ThemedDateInput({
           }}
         />
         )}
-    </ThemedView>
+    </ThemedSection>
   );
 }

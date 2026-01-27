@@ -1,15 +1,16 @@
 import { useThemeColor } from "@/hooks/use-theme-color";
+import { formatMoney } from "@/utils/format-money";
 import { StyleSheet } from "react-native";
 import { ThemedSection } from "../themed-section";
-import { ThemedText } from "../themed-text";
+import { ThemedSectionText } from "../themed-section-text";
 import { ColorInput } from "./color-input";
 
 type ExpenseCardProps = {
-    colorCategory ?: string; 
-    nameCategory ?: string; 
-    amount ?: number; 
+    colorCategory : string; 
+    nameCategory : string; 
+    amount : number; 
+    date : string;
     note ?: string;
-    date ?: string;
     lightColor?: string;
     darkColor?: string;
 }
@@ -31,18 +32,18 @@ export function ExpenseCard({
                     <ColorInput color={colorCategory}/>
                 </ThemedSection>
                 <ThemedSection style={[styles.secondColumn, styles.column]}>
-                    <ThemedText style={[{color: color}]}>{nameCategory}</ThemedText>
+                    <ThemedSectionText type="defaultSemiBold" style={[{color: color}]}>{nameCategory}</ThemedSectionText>
                 </ThemedSection>
                 <ThemedSection style={[styles.thirdColumn, styles.column]}>
-                    <ThemedText style={[{color: color}]}>{amount}</ThemedText>
+                    <ThemedSectionText style={[{color: color}]}>{formatMoney(amount)}</ThemedSectionText>
                 </ThemedSection>
             </ThemedSection>
             <ThemedSection style={styles.secondLine}>
                 <ThemedSection>
-                    <ThemedText style={[{color: color}]}>{date}</ThemedText>
+                    <ThemedSectionText style={[{color: color}]}>{date}</ThemedSectionText>
                 </ThemedSection>
                 <ThemedSection>
-                    <ThemedText style={[{color: color}]}>{note}</ThemedText>
+                    <ThemedSectionText style={[{color: color}]}>{note}</ThemedSectionText>
                 </ThemedSection>
             </ThemedSection>
         </ThemedSection>
@@ -53,7 +54,7 @@ const styles = StyleSheet.create({
     container: {
         width: '100%',
         display: 'flex',
-        padding: 10,
+        // padding: 10,
     },
     firtsLine: {
         width: '100%',

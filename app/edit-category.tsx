@@ -5,5 +5,7 @@ export default function EditCategory(){
     const params = useLocalSearchParams<{
         id?: '';
     }>();
-    return <CategoryEditForm categoryId={Number(params.id)} />
+    return (
+        <CategoryEditForm categoryId={Number(params.id)} />
+    )
 }

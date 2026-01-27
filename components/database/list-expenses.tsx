@@ -2,10 +2,12 @@ import { getExpensesWithCategory } from "@/database/db";
 import { formatDate } from "@/utils/date";
 import { router, useFocusEffect } from "expo-router";
 import { useCallback, useState } from "react";
-import { FlatList, StyleSheet } from "react-native";
+import { FlatList } from "react-native";
+import { ThemedContainer } from "../themed-container";
 import { ThemedPressable } from "../themed-pressable";
+import { ThemedSection } from "../themed-section";
+import { ThemedSectionContainer } from "../themed-section-container";
 import { ThemedText } from "../themed-text";
-import { ThemedView } from "../themed-view";
 import { ExpenseCard } from "../ui/expense-card";
 
 type Expenses = {
@@ -26,39 +28,32 @@ export function ListExpenses() {
         }, [])
     );
     return (
-        <ThemedView style={styles.container}>
+        <ThemedContainer>
             <FlatList
                 data={expenses}
                 keyExtractor={item => item.id.toString()}
                 renderItem={({item}) => {
                     // const date = new Date(item.date).toISOString().split('T')[0]
                     return (
-                        <ThemedView style={styles.sectionCard}>
+                        <ThemedSectionContainer>
                             <ThemedPressable onPress={() => router.push({pathname: '/edit-expense', params: {id: item.id}})}>
-                                <ExpenseCard 
-                                    colorCategory={item.categoryColor}
-                                    nameCategory={item.categoryName}
-                                    amount={item.amount}
-                                    date={formatDate(item.date)}
-                                    note={item.note}
-                                />
+                                <ThemedSection>
+                                    <ExpenseCard 
+                                        colorCategory={item.categoryColor}
+                                        nameCategory={item.categoryName}
+                                        amount={item.amount}
+                                        date={formatDate(item.date)}
+                                        note={item.note}
+                                    />
+                                </ThemedSection>
                             </ThemedPressable>
-                        </ThemedView>
+                        </ThemedSectionContainer>
                     );
                 }}
             />
             <ThemedPressable type="floatButton" onPress={() => router.push('/add-expense')}>
                 <ThemedText>+</ThemedText>
             </ThemedPressable>
-        </ThemedView>
+        </ThemedContainer>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
-    sectionCard: {
-        padding: 10,
-    },
-})

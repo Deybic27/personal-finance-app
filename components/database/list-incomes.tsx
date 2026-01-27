@@ -2,10 +2,12 @@ import { getIncomesWithCategory } from "@/database/db";
 import { formatDate } from "@/utils/date";
 import { router, useFocusEffect } from "expo-router";
 import { useCallback, useState } from "react";
-import { FlatList, StyleSheet } from "react-native";
+import { FlatList } from "react-native";
+import { ThemedContainer } from "../themed-container";
 import { ThemedPressable } from "../themed-pressable";
+import { ThemedSection } from "../themed-section";
+import { ThemedSectionContainer } from "../themed-section-container";
 import { ThemedText } from "../themed-text";
-import { ThemedView } from "../themed-view";
 import { IncomeCard } from "../ui/income-card";
 
 type Incomes = {
@@ -27,38 +29,31 @@ export function ListIncomes() {
     );
 
     return (
-        <ThemedView style={styles.container}>
+        <ThemedContainer>
             <FlatList
                 data={incomes}
                 keyExtractor={item => item.id.toString()}
                 renderItem={({item}) => {
                     return (
-                        <ThemedView style={styles.sectionCard}>
+                        <ThemedSectionContainer>
                             <ThemedPressable onPress={() => router.push({pathname: '/edit-income', params: {id: item.id}})}>
-                                <IncomeCard 
-                                    colorCategory={item.categoryColor}
-                                    nameCategory={item.categoryName}
-                                    amount={item.amount}
-                                    date={formatDate(item.date)}
-                                    note={item.note}
-                                />
+                                <ThemedSection>
+                                    <IncomeCard 
+                                        colorCategory={item.categoryColor}
+                                        nameCategory={item.categoryName}
+                                        amount={item.amount}
+                                        date={formatDate(item.date)}
+                                        note={item.note}
+                                    />
+                                </ThemedSection>
                             </ThemedPressable>
-                        </ThemedView>
+                        </ThemedSectionContainer>
                     );
                 }}
             />
             <ThemedPressable type="floatButton" onPress={() => router.push('/add-income')}>
                 <ThemedText>+</ThemedText>
             </ThemedPressable>
-        </ThemedView>
+        </ThemedContainer>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
-    sectionCard: {
-        padding: 10,
-    },
-})

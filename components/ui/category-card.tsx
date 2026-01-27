@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
     container: {
         width: '100%',
         display: 'flex',
-        padding: 10,
+        // padding: 10,
     },
     firtsLine: {
         width: '100%',

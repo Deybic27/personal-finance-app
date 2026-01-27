@@ -1,7 +1,7 @@
-import { useThemeColor } from "@/hooks/use-theme-color";
 import { FlatList, StyleSheet } from "react-native";
 import { ThemedPressable } from "./themed-pressable";
-import { ThemedText } from "./themed-text";
+import { ThemedSection } from "./themed-section";
+import { ThemedSectionText } from "./themed-section-text";
 import { ThemedView } from "./themed-view";
 
 type Option = {
@@ -12,30 +12,12 @@ type Option = {
 type RadioGroupProps = {
     options: Option[];
     value: string;
-    lightColor?: string;
-    darkColor?: string;
     onChange: (value: string) => void;
 };
 
-export function ThemedRadioGroup({ lightColor, darkColor, options, value, onChange }: RadioGroupProps) {
-    const color = useThemeColor({ light: lightColor, dark: darkColor }, 'text');
-
+export function ThemedRadioGroup({options, value, onChange }: RadioGroupProps) {
     return (
-        <ThemedView>
-            {/* {options.map(option => {
-                const selected = option.value === value;
-
-                return (
-                <ThemedPressable
-                    key={option.value}
-                    style={styles.option}
-                    onPress={() => onChange(option.value)}
-                >
-                    <ThemedView style={[styles.circle, selected && { backgroundColor: color }]} />
-                    <ThemedText>{option.label}</ThemedText>
-                </ThemedPressable>
-                );
-            })} */}
+        <ThemedSection>
             <FlatList
                 data={options}
                 keyExtractor={item => String(item.value)}
@@ -46,13 +28,13 @@ export function ThemedRadioGroup({ lightColor, darkColor, options, value, onChan
                             style={styles.option}
                             onPress={() => onChange(item.value)}
                         >
-                            <ThemedView style={[styles.circle, selected && { backgroundColor: color }]} />
-                            <ThemedText>{item.label}</ThemedText>
+                            <ThemedView style={[styles.circle, selected && { backgroundColor: "#0a7ea4" }]} />
+                            <ThemedSectionText>{item.label}</ThemedSectionText>
                         </ThemedPressable>
                     )
                 }}
             />
-        </ThemedView>
+        </ThemedSection>
     );
 }
 
@@ -68,8 +50,9 @@ const styles = StyleSheet.create({
     width: 18,
     height: 18,
     borderRadius: 9,
-    borderWidth: 2,
+    borderWidth: 1,
     borderColor: '#555',
     marginRight: 8,
+    backgroundColor: "#fff",
   }
 });

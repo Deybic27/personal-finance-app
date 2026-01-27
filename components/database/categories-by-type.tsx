@@ -2,8 +2,11 @@ import { getCategoriesByType } from "@/database/db";
 import { router, useFocusEffect } from "expo-router";
 import { useCallback, useState } from "react";
 import { FlatList, StyleSheet } from "react-native";
+import { ThemedContainer } from "../themed-container";
 import { ThemedPressable } from "../themed-pressable";
-import { ThemedView } from "../themed-view";
+import { ThemedSection } from "../themed-section";
+import { ThemedSectionContainer } from "../themed-section-container";
+import { ThemedText } from "../themed-text";
 import { CategoryCard } from "../ui/category-card";
 
 type CategoriesByTypeProps = {
@@ -25,64 +28,36 @@ export function CategoriesByType({type = 'income'}: CategoriesByTypeProps) {
           setCategories(getCategoriesByType(type));
       }, [])
   );
-
-  // function handleDelete(id: number) {
-  //   const exists = getCategory(id)
-  //   if(!exists) { 
-  //     Alert.alert("Error", "La categoria no existe");
-  //     return;
-  //   }
-  //   deleteCategory(id)
-  //   setCategories(getCategoriesByType(type))
-  //   Alert.alert("Error", "La categoria ha sido eliminada");
-  // }
-
   return (
-      <ThemedView style={[styles.container]}>
-        {/* {categories.map(category => {
-          return(
-            <ThemedView style={[styles.option]} key={category.id}>
-              <ThemedView style={[styles.circle, {backgroundColor: category.color}]}/>
-              <ThemedText style={[styles.name]}>{category.name}</ThemedText>
-              <ThemedPressable type="button" style={[styles.button]} onPress={() => handleDelete(category.id)}>
-                <ThemedText>Eliminar</ThemedText>
-              </ThemedPressable>
-            </ThemedView>
-          );
-        })} */}
+      <ThemedContainer>
         <FlatList
           data={categories}
           keyExtractor={item => String(item.id)}
           renderItem={({item}) => {
             return(
-              <ThemedView style={[styles.sectionCard]}>
+              <ThemedSectionContainer>
                 <ThemedPressable onPress={() => router.push({pathname: '/edit-category', params: {id: item.id}})}>
-                  <CategoryCard
-                    color={item.color}
-                    name={item.name}
-                  />
+                  <ThemedSection>
+                    <CategoryCard
+                      color={item.color}
+                      name={item.name}
+                    />
+                  </ThemedSection>
                 </ThemedPressable>
-              </ThemedView>
+              </ThemedSectionContainer>
             );
           }}
         />
-      </ThemedView>
+        <ThemedPressable type="floatButton" onPress={() => router.push('/add-category')}>
+            <ThemedText>+</ThemedText>
+        </ThemedPressable>
+      </ThemedContainer>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // padding: 20,
-    // width: '100%',
-    // display: 'flex',
-    // flexDirection: 'column',
-    // flex: 1,
-    // borderColor: "#fff",
-    // borderWidth: 1,
-  },
-  sectionCard: {
-      padding: 10,
   },
   option: {
     width: '100%',

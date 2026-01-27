@@ -1,15 +1,15 @@
 import { deleteCategory, getCategory, getCategoryCountRecords, updateCategory } from "@/database/db";
 import { getTransactionTypeName, getTransactionTypeTable, TransactionType } from "@/utils/transaction-type";
-import { Image } from "expo-image";
 import { router, useFocusEffect } from "expo-router";
 import { useCallback, useState } from "react";
 import { Alert, StyleSheet } from "react-native";
-import ParallaxScrollView from "../parallax-scroll-view";
+import { ThemedContainer } from "../themed-container";
 import { ThemedPressable } from "../themed-pressable";
+import { ThemedSection } from "../themed-section";
+import { ThemedSectionContainer } from "../themed-section-container";
+import { ThemedSectionText } from "../themed-section-text";
 import { ThemedSelectColor } from "../themed-select-color";
-import { ThemedText } from "../themed-text";
 import { ThemedTextInput } from "../themed-text-input";
-import { ThemedView } from "../themed-view";
 
 type CategoryEditFormProps = {
     categoryId: number;
@@ -49,7 +49,7 @@ export function CategoryEditForm({
 
         const exists = getCategory(categoryId);
         if(!exists) { 
-            Alert.alert("Error", "Categoria no existe");
+            Alert.alert("Error", "Categoría no existe");
             return null;
         }
 
@@ -59,7 +59,7 @@ export function CategoryEditForm({
             color
         );
         console.log("Update Category: ", categoryId, name, color);
-        Alert.alert("Mensaje", "La categoria ha sido actualizada");
+        Alert.alert("Mensaje", "La categoría ha sido actualizada");
         
         router.back();
     }
@@ -67,7 +67,7 @@ export function CategoryEditForm({
     function handleDelete() {
         const exists = getCategory(categoryId);
         if(!exists) { 
-            Alert.alert("Error", "La categoria no existe");
+            Alert.alert("Error", "La categoría no existe");
             return;
         }
         
@@ -75,12 +75,12 @@ export function CategoryEditForm({
             const table = getTransactionTypeTable(type);
             const countRecords = getCategoryCountRecords(table, categoryId.toString());
             if(countRecords > 0) {
-                Alert.alert("Error", `La categoria no se puede eliminar, tiene ${countRecords} registros asignados.`);
+                Alert.alert("Error", `La categoría no se puede eliminar, tiene ${countRecords} registros asignados.`);
                 return;
             }
             deleteCategory(categoryId)
             console.log("Delete Category: ", categoryId);
-            Alert.alert("Mensaje", "La categoria ha sido eliminada");
+            Alert.alert("Mensaje", "La categoría ha sido eliminada");
     
             router.back();
         }
@@ -88,60 +88,58 @@ export function CategoryEditForm({
     }
 
     return (
-        <ParallaxScrollView
-              headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-              headerImage={
-                <Image
-                  source={require('@/assets/images/partial-react-logo.png')}
-                  style={styles.reactLogo}
-                />
-              }>
-
-            <ThemedView>
-                <ThemedText type="title">Agregar categoría</ThemedText>
-            </ThemedView>
-            <ThemedView>
-                <ThemedText style={{ marginBottom: 12 }} type="subtitle">Nombre de la categoría</ThemedText>
-                <ThemedTextInput value={name} onChangeText={setName} type="default" placeholder="Ej: Comida" />
-            </ThemedView>
-            <ThemedView>
-                <ThemedText type="subtitle">Tipo:</ThemedText>
-                <ThemedText>{nameType}</ThemedText>
-            </ThemedView>
-            <ThemedView>
-                <ThemedText type="subtitle">Color</ThemedText>
-                <ThemedSelectColor
-                    options={[
-                        { color: 'red' },
-                        { color: 'green' },
-                        { color: 'blue' },
-                    ]}
-                    value={color}
-                    onChange={setColor}
-                />
-            </ThemedView>
-            <ThemedView style={styles.stepContainer}>
-                <ThemedPressable type="button" onPress={handleSubmit}>
-                    <ThemedText type="button">Guardar</ThemedText>
-                </ThemedPressable>
-                <ThemedPressable type="buttonDelete" onPress={handleDelete}>
-                    <ThemedText type="button">Eliminar</ThemedText>
-                </ThemedPressable>
-            </ThemedView>
-        </ParallaxScrollView>
+        <ThemedContainer>
+            <ThemedSectionContainer>
+                <ThemedSection>
+                    <ThemedSectionText type="title">Editar categoría</ThemedSectionText>
+                </ThemedSection>
+                <ThemedSection>
+                    <ThemedSectionText style={{ marginBottom: 12 }} type="subtitle">Nombre de la categoría</ThemedSectionText>
+                    <ThemedTextInput value={name} onChangeText={setName} type="default" placeholder="Ej: Comida" />
+                </ThemedSection>
+                <ThemedSection>
+                    <ThemedSectionText type="subtitle">Tipo:</ThemedSectionText>
+                    <ThemedSectionText>{nameType}</ThemedSectionText>
+                </ThemedSection>
+                <ThemedSection>
+                    <ThemedSectionText type="subtitle">Color</ThemedSectionText>
+                    <ThemedSelectColor
+                        options={[
+                            { color: 'red' },
+                            { color: 'green' },
+                            { color: 'blue' },
+                        ]}
+                        value={color}
+                        onChange={setColor}
+                    />
+                </ThemedSection>
+                <ThemedSection style={styles.stepContainer}>
+                    <ThemedPressable type="button" onPress={handleSubmit}>
+                        <ThemedSectionText type="button">Guardar</ThemedSectionText>
+                    </ThemedPressable>
+                    <ThemedPressable type="buttonDelete" onPress={handleDelete}>
+                        <ThemedSectionText type="button">Eliminar</ThemedSectionText>
+                    </ThemedPressable>
+                </ThemedSection>
+            </ThemedSectionContainer>
+        </ThemedContainer>
     );
 }
 
 const styles = StyleSheet.create({
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
+    container: {
+        flex: 1,
+        padding: 20,
+    },
+        reactLogo: {
+        height: 178,
+        width: 290,
+        bottom: 0,
+        left: 0,
+        position: 'absolute',
+    },
+    stepContainer: {
+        gap: 8,
+        marginBottom: 8,
+    },
 });
