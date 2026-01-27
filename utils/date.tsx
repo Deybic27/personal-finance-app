@@ -12,7 +12,7 @@ export function formatDate(
   switch (format) {
     case 'db':
       // Para guardar en DB (NO depende del timezone)
-      return date.toISOString().split('T')[0];
+      return date.toISOString();
 
     case 'iso':
       // ISO sin hora (seguro)
