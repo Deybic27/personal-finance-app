@@ -33,24 +33,30 @@ export function ExpenseEditForm({
     const [categories, setCategories] = useState<Category[]>([]);
       useFocusEffect(
         useCallback(() => {
-          const data = getCategoriesByType('expense');
-
-          setCategories(
-            data.map(category => ({
-              label: category.name,
-              value: String(category.id),
-            }))
-          );
-
-          const currentExpense = getExpenseById(expenseId)
-          setAmount(String(currentExpense?.amount));
-          setCategory(String(currentExpense?.category));
-          setDate(new Date(String(currentExpense?.date)));
-          setNote(String(currentExpense?.note));
+          try {
+            const data = getCategoriesByType('expense');
+  
+            setCategories(
+              data.map(category => ({
+                label: category.name,
+                value: String(category.id),
+              }))
+            );
+  
+  
+            const currentExpense = getExpenseById(expenseId)
+            setAmount(String(currentExpense?.amount));
+            setCategory(String(currentExpense?.category));
+            setDate(new Date(String(currentExpense?.date)));
+            setNote(String(currentExpense?.note));
+          } catch(error) {
+            console.error("Error loading expense edit form", error);
+          }
         }, [])
       );
-
+      
       function handleSubmit() {
+        try {
             if (!amount) {
             Alert.alert('Error', 'El monto es obligatorio');
             return;
@@ -76,30 +82,41 @@ export function ExpenseEditForm({
             // return(console.log(amount, category, date, note));
             // return(console.log(expenseAmount, category, expenseDate, note));
             // console.log("Update Expense: ", expenseId, expenseAmount, category, expenseDate, note);
-            updateExpense(
-              expenseId,
-              expenseAmount,
-              category,
-              expenseDate,
-              note
-            );
-            console.log("Update Expense: ", expenseId, expenseAmount, category, expenseDate, note);
-            Alert.alert("Mensaje", "Gasto actualizado");
-
-            router.back();
+              updateExpense(
+                expenseId,
+                expenseAmount,
+                category,
+                expenseDate,
+                note
+              );
+              console.log("Update Expense: ", expenseId, expenseAmount, category, expenseDate, note);
+              Alert.alert("Mensaje", "Gasto actualizado");
+              
+              router.back();
+        } catch(error) {
+          console.error("Error update expense", error);
+          Alert.alert("Error", "Gasto no guardo");
+          return;
         }
+      }
 
     function handleDelete() {
-      const exists = getExpenseById(expenseId);
-      if(!exists) { 
-          Alert.alert("Error", "El gasto no existe");
-          return;
-      }
-      deleteExpense(expenseId);
-      console.log("Delete Expense", expenseId);
-      Alert.alert("Mensaje", "El gasto ha sido eliminado");
+      try {
+        const exists = getExpenseById(expenseId);
+        if(!exists) { 
+            Alert.alert("Error", "El gasto no existe");
+            return;
+        }
+        deleteExpense(expenseId);
+        console.log("Delete Expense", expenseId);
+        Alert.alert("Mensaje", "El gasto ha sido eliminado");
 
-      router.back();
+        router.back();
+      } catch(error) {
+        console.error("Error delete expense", error);
+        Alert.alert("Error", "Gasto no se eliminó");
+        return;
+      }
     }
     return (
       <ThemedContainer>

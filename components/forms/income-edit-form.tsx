@@ -33,24 +33,29 @@ export function IncomeEditForm({
   const [categories, setCategories] = useState<Category[]>([]);
   useFocusEffect(
     useCallback(() => {
-      const data = getCategoriesByType('income');
+      try {
+        const data = getCategoriesByType('income');
 
-      setCategories(
-        data.map(category => ({
-          label: category.name,
-          value: String(category.id),
-        }))
-      );
+        setCategories(
+          data.map(category => ({
+            label: category.name,
+            value: String(category.id),
+          }))
+        );
 
-      const currentIncome = getIncomeById(incomeId)
-      setAmount(String(currentIncome?.amount));
-      setCategory(String(currentIncome?.category));
-      setDate(new Date(String(currentIncome?.date)));
-      setNote(String(currentIncome?.note));
+        const currentIncome = getIncomeById(incomeId)
+        setAmount(String(currentIncome?.amount));
+        setCategory(String(currentIncome?.category));
+        setDate(new Date(String(currentIncome?.date)));
+        setNote(String(currentIncome?.note));
+      } catch(error) {
+        console.error("Error loading income edit form", error);
+      }
     }, [])
   );
 
   function handleSubmit() {
+    try {
         if (!amount) {
         Alert.alert('Error', 'El monto es obligatorio');
         return;
@@ -85,19 +90,30 @@ export function IncomeEditForm({
         Alert.alert("Mensaje", "Ingreso actualizado");
 
         router.back();
+    } catch(error) {
+      console.error("Error edit income", error);
+      Alert.alert("Error", "Ingreso no guardó");
+      return;
     }
+  }
 
     function handleDelete() {
-      const exists = getIncomeById(incomeId);
-      if(!exists) { 
-          Alert.alert("Error", "El ingreso no existe");
-          return;
-      }
-      deleteIncome(incomeId);
-      console.log("Delete Income", incomeId);
-      Alert.alert("Mensaje", "El ingreso ha sido eliminado");
+      try {
+        const exists = getIncomeById(incomeId);
+        if(!exists) { 
+            Alert.alert("Error", "El ingreso no existe");
+            return;
+        }
+        deleteIncome(incomeId);
+        console.log("Delete Income", incomeId);
+        Alert.alert("Mensaje", "El ingreso ha sido eliminado");
 
-      router.back();
+        router.back();
+      } catch(error) {
+        console.error("Error delete income", error);
+        Alert.alert("Error", "Ingreso no se eliminó");
+        return;
+      }
     }
     return (
       <ThemedContainer>

@@ -25,7 +25,12 @@ export function CategoriesByType({type = 'income'}: CategoriesByTypeProps) {
 
   useFocusEffect(
       useCallback(() => {
+        try {
           setCategories(getCategoriesByType(type));
+        } catch(error) {
+          console.error("Error loading categories by type", error);
+          return;
+        }
       }, [])
   );
   return (

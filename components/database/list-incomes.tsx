@@ -24,7 +24,12 @@ export function ListIncomes() {
 
     useFocusEffect(
         useCallback(() => {
-            setIncomes(getIncomesWithCategory());
+            try {
+                setIncomes(getIncomesWithCategory());
+            } catch(error) {
+                console.error("Error loading list incomes", error);
+                return;
+            }
         }, [])
     );
 

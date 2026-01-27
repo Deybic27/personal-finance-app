@@ -25,64 +25,81 @@ export function CategoryEditForm({
 
     useFocusEffect(
         useCallback(() => {
-            const currentCategory = getCategory(categoryId)
-            setName(String(currentCategory?.name));
-            setType(currentCategory?.type);
-            setColor(String(currentCategory?.color));
-            if(currentCategory?.type) setNameType(getTransactionTypeName(currentCategory?.type))
+            try {
+                const currentCategory = getCategory(categoryId)
+                setName(String(currentCategory?.name));
+                setType(currentCategory?.type);
+                setColor(String(currentCategory?.color));
+                if(currentCategory?.type) setNameType(getTransactionTypeName(currentCategory?.type))
+            } catch(error) {
+                console.error("Error loading category edit form", error);
+                return;
+            }
         }, [])
     );
 
     function handleSubmit() {
-        if (!name) {
-        Alert.alert('Error', 'El nombre es obligatorio');
-        return;
-        }
-        if (!type) {
-        Alert.alert('Error', 'El tipo es obligatorio');
-        return;
-        }
-        if (!color) {
-        Alert.alert('Error', 'El color es obligatorio');
-        return;
-        }
+        try {
+            if (!name) {
+            Alert.alert('Error', 'El nombre es obligatorio');
+            return;
+            }
+            if (!type) {
+            Alert.alert('Error', 'El tipo es obligatorio');
+            return;
+            }
+            if (!color) {
+            Alert.alert('Error', 'El color es obligatorio');
+            return;
+            }
 
-        const exists = getCategory(categoryId);
-        if(!exists) { 
-            Alert.alert("Error", "Categoría no existe");
-            return null;
-        }
+            const exists = getCategory(categoryId);
+            if(!exists) { 
+                Alert.alert("Error", "Categoría no existe");
+                return null;
+            }
 
-        updateCategory(
-            categoryId,
-            name,
-            color
-        );
-        console.log("Update Category: ", categoryId, name, color);
-        Alert.alert("Mensaje", "La categoría ha sido actualizada");
-        
-        router.back();
+            updateCategory(
+                categoryId,
+                name,
+                color
+            );
+            console.log("Update Category: ", categoryId, name, color);
+            Alert.alert("Mensaje", "La categoría ha sido actualizada");
+            
+            router.back();
+        } catch(error) {
+            console.error("Error update category", error);
+            Alert.alert("Error", "Categoría no se guardó");
+            return;
+        }
     }
 
     function handleDelete() {
-        const exists = getCategory(categoryId);
-        if(!exists) { 
-            Alert.alert("Error", "La categoría no existe");
-            return;
-        }
-        
-        if (type) {
-            const table = getTransactionTypeTable(type);
-            const countRecords = getCategoryCountRecords(table, categoryId.toString());
-            if(countRecords > 0) {
-                Alert.alert("Error", `La categoría no se puede eliminar, tiene ${countRecords} registros asignados.`);
+        try {
+            const exists = getCategory(categoryId);
+            if(!exists) { 
+                Alert.alert("Error", "La categoría no existe");
                 return;
             }
-            deleteCategory(categoryId)
-            console.log("Delete Category: ", categoryId);
-            Alert.alert("Mensaje", "La categoría ha sido eliminada");
-    
-            router.back();
+            
+            if (type) {
+                const table = getTransactionTypeTable(type);
+                const countRecords = getCategoryCountRecords(table, categoryId.toString());
+                if(countRecords > 0) {
+                    Alert.alert("Error", `La categoría no se puede eliminar, tiene ${countRecords} registros asignados.`);
+                    return;
+                }
+                deleteCategory(categoryId)
+                console.log("Delete Category: ", categoryId);
+                Alert.alert("Mensaje", "La categoría ha sido eliminada");
+        
+                router.back();
+            }
+        } catch(error) {
+            console.error("Error delete category", error);
+            Alert.alert("Error", "Categoría no se eliminó");
+            return;
         }
 
     }

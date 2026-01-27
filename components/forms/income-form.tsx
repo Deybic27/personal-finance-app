@@ -27,18 +27,23 @@ export function IncomeForm(){
     const [categories, setCategories] = useState<Category[]>([]);
       useFocusEffect(
         useCallback(() => {
-          const data = getCategoriesByType('income');
+          try {
+            const data = getCategoriesByType('income');
 
-          setCategories(
-            data.map(category => ({
-              label: category.name,
-              value: String(category.id),
-            }))
-          );
+            setCategories(
+              data.map(category => ({
+                label: category.name,
+                value: String(category.id),
+              }))
+            );
+          } catch(error) {
+            console.error("Error loading income form", error);
+          }
         }, [])
       );
 
       function handleSubmit() {
+        try {
             if (!amount) {
             Alert.alert('Error', 'El monto es obligatorio');
             return;
@@ -54,18 +59,22 @@ export function IncomeForm(){
 
             const expenseAmount = parseInt(amount)
             const incomeDate = formatDate(date, 'db')
-
-            insertIncome(
-              expenseAmount,
-              category,
-              incomeDate,
-              note
-            );
-            console.log("Insert Income: ", expenseAmount, category, incomeDate, note);
-            Alert.alert("Mensaje", "Ingreso guardado");
-
-            router.back();
+              insertIncome(
+                expenseAmount,
+                category,
+                incomeDate,
+                note
+              );
+              console.log("Insert Income: ", expenseAmount, category, incomeDate, note);
+              Alert.alert("Mensaje", "Ingreso guardado");
+              
+              router.back();
+        } catch(error) {
+          console.error("Error insert income", error);
+          Alert.alert("Error", "Ingreso no guardó");
+          return;
         }
+      }
     return (
       <ThemedContainer>
         <ThemedSectionContainer>

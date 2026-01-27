@@ -39,7 +39,7 @@ export function ThemedPicker({
                 selectedValue={value}
                 onValueChange={(itemValue) => onChange(itemValue)}
             >
-                <Picker.Item label="Seleccione"/>
+                <Picker.Item label="Seleccione" value=""/>
                 {items.map((item) => (
                     <Picker.Item key={item.value} label={item.label} value={item.value} />
                 ))}

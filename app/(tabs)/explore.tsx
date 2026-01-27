@@ -73,7 +73,7 @@ export default function TabTwoScreen() {
       </Collapsible>
       <Collapsible title="Base de datos">
         <ThemedText>
-          <ThemedPressable onPress={() => resetDb()}>
+          <ThemedPressable onPress={() => {try {resetDb()} catch (error) {console.error("Error reset DB", error)}}}>
             <ThemedText type="link">Reset</ThemedText>
           </ThemedPressable>
         </ThemedText>

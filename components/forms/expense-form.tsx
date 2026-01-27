@@ -28,21 +28,26 @@ export function ExpenseForm() {
   const [categories, setCategories] = useState<Category[]>([]);
   useFocusEffect(
     useCallback(() => {
-      const data = getCategoriesByType('expense');
-      console.log("Categorías de Expenses: ", data);
-      const dataExpenses = getExpenses();
-      console.log("Expenses: ", dataExpenses);
+      try {
+        const data = getCategoriesByType('expense');
+        console.log("Categorías de Expenses: ", data);
+        const dataExpenses = getExpenses();
+        console.log("Expenses: ", dataExpenses);
 
-      setCategories(
-        data.map(category => ({
-          label: category.name,
-          value: String(category.id),
-        }))
-      );
+        setCategories(
+          data.map(category => ({
+            label: category.name,
+            value: String(category.id),
+          }))
+        );
+      } catch(error) {
+        console.error("Error loading expense form", error);
+      }
     }, [])
   );
 
   function handleSubmit() {
+    try {
     if (!amount) {
       Alert.alert('Error', 'El monto es obligatorio');
       return;
@@ -58,17 +63,21 @@ export function ExpenseForm() {
 
     const expenseAmount = parseInt(amount)
     const expenseDate = formatDate(date, 'db')
-
-    insertExpense(
-      expenseAmount,
-      category,
-      expenseDate,
-      note
-    );
-    console.log("Insert Expense: ", expenseAmount, category, expenseDate, note);
-    Alert.alert("Mensaje", "Gasto guardado");
-    
-    router.back();
+      insertExpense(
+        expenseAmount,
+        category,
+        expenseDate,
+        note
+      );
+      console.log("Insert Expense: ", expenseAmount, category, expenseDate, note);
+      Alert.alert("Mensaje", "Gasto guardado");
+      
+      router.back();
+    } catch(error) {
+      console.error("Error insert expense", error);
+      Alert.alert("Error", "Gasto no guardó");
+      return;
+    }
   }
   
   return (

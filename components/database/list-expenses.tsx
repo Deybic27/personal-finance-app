@@ -24,7 +24,12 @@ export function ListExpenses() {
 
     useFocusEffect(
         useCallback(() => {
-            setExpenses(getExpensesWithCategory());
+            try {
+                setExpenses(getExpensesWithCategory());
+            } catch(error) {
+                console.error("Error loading list expenses", error);
+                return;
+            }
         }, [])
     );
     return (

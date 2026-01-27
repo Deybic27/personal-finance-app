@@ -19,9 +19,14 @@ export default function HomeScreen() {
 
   useFocusEffect(
       useCallback(() => {
+        try {
           setTotalAmountIncomes(getTotalIncomes());
           setTotalAmountExpenses(getTotalExpenses());
           setSaldo(getSaldo());
+        } catch(error) {
+          console.error("Error loading index", error);
+          return;
+        }
       }, [])
   );
   return (

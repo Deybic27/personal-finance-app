@@ -17,33 +17,39 @@ export function CategoryForm() {
     const [color, setColor] = useState('red');
 
     function handleSubmit() {
-        if (!name) {
-        Alert.alert('Error', 'El nombre es obligatorio');
-        return;
-        }
-        if (!type) {
-        Alert.alert('Error', 'El tipo es obligatorio');
-        return;
-        }
-        if (!color) {
-        Alert.alert('Error', 'El color es obligatorio');
-        return;
-        }
+        try {
+            if (!name) {
+            Alert.alert('Error', 'El nombre es obligatorio');
+            return;
+            }
+            if (!type) {
+            Alert.alert('Error', 'El tipo es obligatorio');
+            return;
+            }
+            if (!color) {
+            Alert.alert('Error', 'El color es obligatorio');
+            return;
+            }
 
-        if (getCategoryByName(name, type).length > 0) {
-            Alert.alert('Error', 'La categoría ya existe');
+            if (getCategoryByName(name, type).length > 0) {
+                Alert.alert('Error', 'La categoría ya existe');
+                return;
+            }
+
+            insertCategory(
+                name,
+                type,
+                color
+            );
+            console.log("Insert Category: ", name, type, color);
+            Alert.alert("Mensaje", "La categoría ha sido creada");
+            
+            router.back();
+        } catch(error) {
+            console.error("Error insert category", error);
+            Alert.alert("Error", "Categoría no guardó");
             return;
         }
-
-        insertCategory(
-            name,
-            type,
-            color
-        );
-        console.log("Insert Category: ", name, type, color);
-        Alert.alert("Mensaje", "La categoría ha sido creada");
-
-        router.back();
     }
 
     return (
