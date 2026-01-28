@@ -8,7 +8,6 @@ import { Collapsible } from '@/components/ui/collapsible';
 import { Fonts } from '@/constants/theme';
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
-import { resetDb } from '../../database/db';
 
 export default function TabTwoScreen() {
   return (
@@ -69,13 +68,22 @@ export default function TabTwoScreen() {
           </ThemedPressable>
         </ThemedText>
       </Collapsible>
-      <Collapsible title="Base de datos">
+      {/* POLICES */}
+      <Collapsible title="Políticas">
+        <ThemedText>
+          <ThemedPressable onPress={() => router.push('https://sites.google.com/view/gestor-gastos-privacidad')}>
+            <ThemedText type="link">Política de Privacidad</ThemedText>
+          </ThemedPressable>
+        </ThemedText>
+      </Collapsible>
+      {/* RESET DB */}
+      {/* <Collapsible title="Base de datos">
         <ThemedText>
           <ThemedPressable onPress={() => {try {resetDb()} catch (error) {console.error("Error reset DB", error)}}}>
             <ThemedText type="link">Reset</ThemedText>
           </ThemedPressable>
         </ThemedText>
-      </Collapsible>
+      </Collapsible> */}
       {/* <Collapsible title="File-based routing">
         <ThemedText>
           This app has two screens:{' '}
