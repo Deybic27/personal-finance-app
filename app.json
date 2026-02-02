@@ -13,7 +13,7 @@
     },
     "android": {
       "package": "com.dgameplay.expensemanager",
-      "versionCode": 1,
+      "versionCode": 10000,
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
@@ -42,17 +42,19 @@
         }
       ],
       "@react-native-community/datetimepicker",
-      "expo-sqlite"
+      "expo-sqlite",
+      [
+        "expo-navigation-bar",
+        {
+          "position": "relative",
+          "visibility": "hidden",
+          "behavior": "inset-swipe"
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
-    },
-    "extra": {
-      "router": {},
-      "eas": {
-        "projectId": "15258d0a-47de-46c9-8099-c09d7139637b"
-      }
     }
   }
 }
